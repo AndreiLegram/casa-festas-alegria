@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('data_aquisicao'); // data da aquisição
             $table->decimal('valor_locacao', 8, 2); // valor da locação
             $table->timestamps();
+            
         });
     }
 
