@@ -105,6 +105,7 @@ class LocacoesController extends Controller {
             return response()->json('Locação sem itens!', 400);
         }
 
+        
         return response()->json($locacao->load('locacaoItems'), 200);
     }
 
