@@ -1,5 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import {
   Table,
@@ -21,7 +21,14 @@ export default function Cliente({ clientes, auth, mustVerifyEmail, status }: Pag
       <section className='container'>
         <div className="py-12">
           <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            {/* Aqui fica a tabela */}
+            <Link href={route('cliente.create')}>
+              <button className="bg-blue-500 text-white px-4 py-2 rounded">Adicionar Cliente</button>
+            </Link>
+          </div>
+          {/* Renderize a tabela de clientes aqui */}
+        </div>
+        <div className="py-12">
+          <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <Table>
               <TableCaption>Listagem dos clientes cadastrados.</TableCaption>
               <TableHeader>
@@ -34,7 +41,6 @@ export default function Cliente({ clientes, auth, mustVerifyEmail, status }: Pag
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {/* Renderizando a lista de clientes */}
                 {clientes.map((cliente) => (
                   <TableRow key={cliente.id}>
                     <TableCell>{cliente.nome}</TableCell>
