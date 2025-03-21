@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('id_contato'); 
             $table->decimal('valor_total', 8, 2);
             $table->date('data_devolucao');
+            $table->date('data_pagamento');
             $table->timestamps();
         });
     }
