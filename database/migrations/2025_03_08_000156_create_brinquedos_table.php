@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('brinquedos', function (Blueprint $table) {
-            $table->id(); // campo id padrão (chave primária)
-            $table->string('codigo_unico')->unique(); // código único
-            $table->string('nome'); // nome do brinquedo
-            $table->string('tipo'); // tipo do brinquedo
-            $table->string('marca'); // marca do brinquedo
-            $table->date('data_aquisicao'); // data da aquisição
-            $table->decimal('valor_locacao', 8, 2); // valor da locação
+            $table->id();
+            $table->string('codigo_unico')->unique();
+            $table->string('nome');
+            $table->string('tipo');
+            $table->string('marca');
+            $table->date('data_aquisicao');
+            $table->decimal('valor_locacao', 8, 2);
             $table->timestamps();
         });
     }
