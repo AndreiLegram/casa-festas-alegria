@@ -21,7 +21,7 @@ class Locacao extends Model
 
     public function locacaoItems()
     {
-        return $this->hasMany(LocacaoItem::class, 'id_locacao');
+        return $this->hasMany(LocacaoItem::class, 'id_locacao')->onDelete('cascade');
     }
 
     public function cliente()
