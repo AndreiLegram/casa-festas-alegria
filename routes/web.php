@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware('auth')->group(function () {
+    Route::get('/cliente', [ClienteController::class, 'index'])->name('cliente.index');
+    Route::get('/cliente/{cliente}', [ClienteController::class, 'edit'])->name('cliente.edit');
+    Route::patch('/cliente', [ClienteController::class, 'update'])->name('cliente.update');
+    Route::delete('/cliente', [ClienteController::class, 'destroy'])->name('cliente.destroy');
+});
 
 Route::get('/produto', function () {
     return Inertia::render('produto');

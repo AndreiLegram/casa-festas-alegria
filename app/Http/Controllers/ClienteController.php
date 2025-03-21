@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cliente; 
+use Inertia\Inertia;
 
 class ClienteController extends Controller {
 
     public function index()
     {
         $clientes = Cliente::all();  
-        return response()->json($clientes);  
+        return Inertia::render('Cliente', [
+            'clientes' => $clientes
+        ]);
     }
 
     public function show($id)
@@ -18,10 +21,10 @@ class ClienteController extends Controller {
         $cliente = Cliente::find($id);
 
         if (!$cliente) {
-            return response()->json(['message' => 'cliente não encontrado'], 404);
+            return Inertia::render(['message' => 'cliente não encontrado'], 404);
         }
 
-        return response()->json($cliente);
+        return Inertia::render($cliente);
     }
 
     public function store(Request $request)
@@ -32,7 +35,7 @@ class ClienteController extends Controller {
         ]);
 
         $cliente = Cliente::create($validated); 
-        return response()->json($cliente, 201); 
+        return Inertia::render($cliente, 201); 
     }
 
     public function update(Request $request, $id)
@@ -40,7 +43,7 @@ class ClienteController extends Controller {
         $cliente = Cliente::find($id);
 
         if (!$cliente) {
-            return response()->json(['message' => 'cliente não encontrado'], 404);
+            return Inertia::render(['message' => 'cliente não encontrado'], 404);
         }
 
         $validated = $request->validate([
@@ -49,7 +52,7 @@ class ClienteController extends Controller {
         ]);
 
         $cliente->update($validated); 
-        return response()->json($cliente); 
+        return Inertia::render($cliente); 
     }
 
     public function destroy($id)
@@ -57,10 +60,10 @@ class ClienteController extends Controller {
         $cliente = Cliente::find($id);
 
         if (!$cliente) {
-            return response()->json(['message' => 'cliente não encontrado'], 404);
+            return Inertia::render(['message' => 'cliente não encontrado'], 404);
         }
 
         $cliente->delete();
-        return response()->json(['message' => 'cliente deletado com sucesso']);
+        return Inertia::render(['message' => 'cliente deletado com sucesso']);
     }
 }
