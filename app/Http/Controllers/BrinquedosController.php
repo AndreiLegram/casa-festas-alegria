@@ -3,14 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Brinquedo; // Supondo que você tenha um modelo Brinquedo
+use App\Models\Brinquedo;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class BrinquedosController extends Controller
 {
     public function index()
     {
-        $brinquedos = Brinquedo::all();  // Retorna todos os brinquedos no banco de dados
-        return response()->json($brinquedos);  // Retorna os brinquedos em formato JSON
+        $brinquedos = Brinquedo::all();
+        return Inertia::render('brinquedos/brinquedos', [
+            'brinquedos' => $brinquedos
+        ]);
     }
 
     public function show($id)
