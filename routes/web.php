@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BrinquedosController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -42,6 +43,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/cliente', [ClienteController::class, 'update'])->name('cliente.update');
     Route::delete('/cliente', [ClienteController::class, 'destroy'])->name('cliente.destroy');
 });
+
+Route::get('/brinquedos', [BrinquedosController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('brinquedos');
 
 Route::get('/produto', function () {
     return Inertia::render('produto');
