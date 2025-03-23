@@ -14,6 +14,8 @@ class TipoBrinquedo extends Model
         'codigo',
         'nome'
     ];
+    
+    protected $table = 'tipos_brinquedos';
 
     // Caso você queira algum comportamento personalizado para a model, pode adicionar métodos extras aqui
 }
