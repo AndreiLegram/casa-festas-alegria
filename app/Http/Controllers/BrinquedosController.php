@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Brinquedo;
+use App\Models\TipoBrinquedo;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -14,6 +15,17 @@ class BrinquedosController extends Controller
         $brinquedos = Brinquedo::all();
         return Inertia::render('brinquedos/brinquedos', [
             'brinquedos' => $brinquedos
+        ]);
+    }
+
+    public function form($id = null)
+    {
+        $tipos = TipoBrinquedo::all();
+        $brinquedo = $id ? Brinquedo::find($id) : null;
+
+        return Inertia::render('brinquedos/brinquedosForm', [
+            'brinquedo' => $brinquedo,
+            'tipos' => $tipos
         ]);
     }
 
@@ -37,7 +49,7 @@ class BrinquedosController extends Controller
         ]);
 
         $brinquedo = Brinquedo::create($validated); // Cria um novo brinquedo no banco
-        return response()->json($brinquedo, 201); // Retorna o brinquedo criado com status 201
+        return $this->index();
     }
 
     public function update(Request $request, $id)
@@ -55,7 +67,7 @@ class BrinquedosController extends Controller
         ]);
 
         $brinquedo->update($validated); // Atualiza os dados do brinquedo
-        return response()->json($brinquedo); // Retorna o brinquedo atualizado
+        return $this->index();
     }
 
     public function destroy($id)
