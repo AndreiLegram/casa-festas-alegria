@@ -42,14 +42,21 @@ class BrinquedosController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nome' => 'required|string|max:255',
-            'descricao' => 'required|string',
-            'preco' => 'required|numeric',
+        
+        $validatedData = $request->validate([
+            'nome' => 'required|string',
+            'tipo' => 'required|string',
+            'marca' => 'required|string',
+            'data_aquisicao' => 'required|date',
+            'valor_locacao' => 'required|numeric',
+          ]);
+          dd($validatedData);
+          
+        $brinquedo = Brinquedo::create($validatedData); // Cria um novo brinquedo no banco
+        
+        return Inertia::render('brinquedos/brinquedos', [
+            'brinquedos' => $brinquedos
         ]);
-
-        $brinquedo = Brinquedo::create($validated); // Cria um novo brinquedo no banco
-        return $this->index();
     }
 
     public function update(Request $request, $id)

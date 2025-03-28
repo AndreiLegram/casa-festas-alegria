@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader } from "@/Components/ui/card";
+import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
 import { FieldError, useForm } from "react-hook-form";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { PageProps } from '@/types';
 import { Head } from "@inertiajs/react";
 import { useForm as useInertiaForm } from '@inertiajs/react'; // Only use Inertia's useForm when needed
+import { router } from '@inertiajs/react'
 
 export default function BrinquedosForm({ brinquedo, tipos, auth }: PageProps<{ brinquedo: any, tipos: Array<any>, auth: any }>) {
   // React Hook Form
@@ -27,18 +28,22 @@ export default function BrinquedosForm({ brinquedo, tipos, auth }: PageProps<{ b
   // Inertia Form for submission
   const { post, put, processing } = useInertiaForm();
 
-  // Submit form
   const submitForm = (data: any) => {
     if (brinquedo) {
-      put(route('brinquedosSave', brinquedo.id), {
-        onSuccess: () => setMessage("Brinquedo atualizado com sucesso!"),
-        onError: () => setMessage("Ocorreu um erro ao atualizar o brinquedo."),
+      router.put(`/brinquedosUpdate/${brinquedo.id}`, data, {
+        onSuccess: (response) => {
+        },
+        onError: (errors: any) => {
+          setMessage(errors.message || "Ocorreu um erro inesperado.");
+        },
       });
     } else {
-      post(route('brinquedosSave'), {
-        data,
-        onSuccess: () => setMessage("Brinquedo cadastrado com sucesso!"),
-        onError: () => setMessage("Ocorreu um erro ao cadastrar o brinquedo."),
+      router.post('/brinquedosStore', data, {
+        onSuccess: (response) => {
+        },
+        onError: (errors: any) => {
+          setMessage(errors.message || "Ocorreu um erro inesperado.");
+        },
       });
     }
   };
