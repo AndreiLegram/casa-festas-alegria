@@ -42,6 +42,23 @@ class BrinquedosController extends Controller
 
     public function store(Request $request)
     {
+        $content = $request->getContent();
+        $data = json_decode($content, true); 
+        if (!empty($data->codigo_unico)) {
+            $produtos = DB::table('brinquedos')
+                    ->select('id')
+                    ->where('codigo', '=', $data->codigo_unico)
+                    ->get();
+
+            if (!empty($produtos)) {
+                return Inertia::render('brinquedos/brinquedosForm', [
+                    'errors' => 'Código já cadastrado', // Erros de validação
+                    'brinquedo' => $request->all(),
+                    'tipos' => $tipos   
+                ]); 
+            }
+        }
+
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
             'descricao' => 'required|string',

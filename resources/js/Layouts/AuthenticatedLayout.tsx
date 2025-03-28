@@ -22,6 +22,9 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                             </div>
 
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                <NavLink href={route('tiposBrinquedos')} active={route().current('tiposBrinquedos')}>
+                                    Tipos de Brinquedo
+                                </NavLink>
                                 <NavLink href={route('brinquedos')} active={route().current('brinquedos')}>
                                     Brinquedo
                                 </NavLink>
@@ -98,6 +101,9 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                     <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink href={route('brinquedos')} active={route().current('brinquedos')}>
                             Brinquedo
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('tiposBrinquedos')} active={route().current('tiposBrinquedos')}>
+                            Tipos de Brinquedo
                         </ResponsiveNavLink>
                     </div>
 

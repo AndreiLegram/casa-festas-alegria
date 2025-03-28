@@ -3,25 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Funcionario; 
+use App\Models\TipoBrinquedo; 
+use Inertia\Inertia;
+use Inertia\Response;
 
 class TiposBrinquedosController extends Controller {
     
     public function index()
     {
         $tiposBrinquedos = TipoBrinquedo::all();  
-        return response()->json($tiposBrinquedos);  
+        return Inertia::render('tiposBrinquedos/tiposBrinquedos', [
+            'tiposBrinquedos' => $tiposBrinquedos
+        ]);  
     }
 
-    public function show($id)
+    public function form($id = null)
     {
-        $tiposBrinquedos = TipoBrinquedo::find($id);
+        $tipoBrinquedo = $id ? TipoBrinquedo::find($id) : null;
 
-        if (!$tiposBrinquedos) {
-            return response()->json(['message' => 'TipoBrinquedo não encontrado'], 404);
-        }
-
-        return response()->json($tiposBrinquedos);
+        return Inertia::render('tiposBrinquedos/tipoBrinquedo', [
+            'tipoBrinquedo' => $tipoBrinquedo
+        ]);
     }
 
     public function store(Request $request)
@@ -32,7 +34,7 @@ class TiposBrinquedosController extends Controller {
         ]);
 
         $tipoBrinquedo = TipoBrinquedo::create($validated); 
-        return response()->json($tipoBrinquedo, 201); 
+        return $this->index(); 
     }
 
     public function update(Request $request, $id)
@@ -40,7 +42,7 @@ class TiposBrinquedosController extends Controller {
         $tipoBrinquedo = TipoBrinquedo::find($id);
 
         if (!$tipoBrinquedo) {
-            return response()->json(['message' => 'TipoBrinquedo não encontrado'], 404);
+            return response()->json(['message' => 'Tipo Brinquedo não encontrado'], 404);
         }
 
         $validated = $request->validate([
@@ -49,18 +51,21 @@ class TiposBrinquedosController extends Controller {
         ]);
 
         $tipoBrinquedo->update($validated); 
-        return response()->json($tipoBrinquedo); 
+        return $this->index();  
     }
 
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $tipoBrinquedo = TipoBrinquedo::find($id);
+        $content = $request->getContent();
+        $id = json_decode($content, true); 
+
+        $tipoBrinquedo = TipoBrinquedo::find($data->id);
 
         if (!$tipoBrinquedo) {
-            return response()->json(['message' => 'TipoBrinquedo não encontrado'], 404);
+            return $this->index();  
         }
 
         $tipoBrinquedo->delete();
-        return response()->json(['message' => 'TipoBrinquedo deletado com sucesso']);
+        return $this->index();  
     }
 }
