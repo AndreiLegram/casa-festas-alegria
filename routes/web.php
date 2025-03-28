@@ -3,6 +3,7 @@
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BrinquedosController;
+use App\Http\Controllers\TiposBrinquedosController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -44,17 +45,20 @@ Route::middleware('auth')->group(function () {
     Route::delete('/cliente', [ClienteController::class, 'destroy'])->name('cliente.destroy');
 });
 
-
-// Route::get('/brinquedos', [BrinquedosController::class, 'index'])
-//     ->middleware(['auth', 'verified'])
-//     ->name('brinquedos');
-
 Route::middleware(['auth'])->group(function () {
     Route::get('/brinquedos', [BrinquedosController::class, 'index'])->name('brinquedos');
     Route::get('/brinquedosForm/{id?}', [BrinquedosController::class, 'form'])->name('brinquedosForm');
     Route::post('/brinquedosStore', [BrinquedosController::class, 'store'])->name('brinquedosStore');
     Route::put('/brinquedosUpdate/{id}', [BrinquedosController::class, 'update'])->name('brinquedosUpdate');
     Route::delete('/brinquedos/{brinquedo}', [BrinquedosController::class, 'destroy'])->name('brinquedosDelete');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/tiposBrinquedos', [TiposBrinquedosController::class, 'index'])->name('tiposBrinquedos');
+    Route::get('/tipoBrinquedo/{id?}', [TiposBrinquedosController::class, 'form'])->name('tipoBrinquedo');
+    Route::post('/tipoBrinquedoSave', [TiposBrinquedosController::class, 'store'])->name('tipoBrinquedoSave');
+    Route::put('/tiposBrinquedos/{id?}', [TiposBrinquedosController::class, 'update'])->name('tipoBrinquedoSave');
+    Route::delete('/tiposBrinquedos', [TiposBrinquedosController::class, 'destroy'])->name('tipoBrinquedoDelete');
 });
 
 require __DIR__.'/auth.php';
