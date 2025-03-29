@@ -24,37 +24,41 @@ export default function Brinquedos({ brinquedos, auth, mustVerifyEmail, status }
       header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Brinquedos</h2>}
     >
       <Head title="Brinquedos" />
-      <Link href="/brinquedosForm">
-        <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md">
-          Cadastrar Novo Brinquedo
-        </button>
-      </Link>
-      <section className="container">
+      <section style={{ display: 'flex', justifyContent: 'center' }}>
         <div className="py-12">
+          <Link href="/brinquedo">
+            <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md mb-10">
+              Cadastrar Novo Brinquedo
+            </button>
+          </Link>
           <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <Table>
               <TableCaption>Listagem dos brinquedos cadastrados.</TableCaption>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Tipo</TableHead>
-                  <TableHead>Marca</TableHead>
-                  <TableHead>Data de Aquisição</TableHead>
-                  <TableHead>Valor da Locação</TableHead>
-                  <TableHead>Ações</TableHead>
+                  <TableHead className="px-6">Nome</TableHead>
+                  <TableHead className="px-6">Código</TableHead>
+                  <TableHead className="px-6">Tipo</TableHead>
+                  <TableHead className="px-6">Marca</TableHead>
+                  <TableHead className="px-6">Data de Aquisição</TableHead>
+                  <TableHead className="px-6">Valor da Locação</TableHead>
+                  <TableHead className="px-6 text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {brinquedos.map((brinquedo) => (
                   <TableRow key={brinquedo.id}>
-                    <TableCell>{brinquedo.nome}</TableCell>
-                    <TableCell>{brinquedo.tipo}</TableCell>
-                    <TableCell>{brinquedo.marca}</TableCell>
-                    <TableCell>{brinquedo.data_aquisicao}</TableCell>
-                    <TableCell>{brinquedo.valor_locacao}</TableCell>
-                    <TableCell className="flex space-x-2">
-                      <Link href={`/brinquedosForm/${brinquedo.id}`}>
-                        <button className="px-4 py-2 bg-yellow-500 text-white rounded-md">
+                    <TableCell className="px-6">{brinquedo.nome}</TableCell>
+                    <TableCell className="px-6">{brinquedo.codigo_unico}</TableCell>
+                    <TableCell className="px-6">{brinquedo.tipo}</TableCell>
+                    <TableCell className="px-6">{brinquedo.marca}</TableCell>
+                    <TableCell className="px-6">
+                      {new Date(brinquedo.data_aquisicao).toLocaleDateString('pt-BR')}
+                    </TableCell>
+                    <TableCell className="px-6">{brinquedo.valor_locacao}</TableCell>
+                    <TableCell className="text-right flex space-x-2 justify-end px-6">
+                      <Link href={`/brinquedo/${brinquedo.id}`}>
+                        <button className="px-4 py-2 mr-10 bg-yellow-500 text-white rounded-md">
                           Editar
                         </button>
                       </Link>

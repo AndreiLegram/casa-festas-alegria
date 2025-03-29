@@ -11,7 +11,7 @@ class ClienteController extends Controller {
     public function index()
     {
         $clientes = Cliente::all();  
-        return Inertia::render('Cliente', [
+        return Inertia::render('clientes/Clientes', [
             'clientes' => $clientes
         ]);
     }

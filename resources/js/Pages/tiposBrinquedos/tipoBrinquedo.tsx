@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader } from "@/Components/ui/card";
+import { Input } from "@/Components/ui/input";
 import { Button } from "@/Components/ui/button";
 import { FieldError, useForm } from "react-hook-form";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
@@ -64,7 +64,7 @@ export default function TipoBrinquedo({ tipoBrinquedo, auth }: PageProps<{ tipoB
                 {errors.nome && <p className="text-red-500 text-sm">{(errors.nome as FieldError)?.message}</p>}
               </div>
 
-                <Button type="submit" className="w-full" disabled={processing}>
+                <Button type="submit" className="w-full bg-blue-500 " disabled={processing}>
                   {tipoBrinquedo ? "Atualizar tipo de brinquedo" : "Cadastrar tipo de brinquedo"}
                 </Button>
             </form>
