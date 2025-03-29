@@ -6,14 +6,14 @@ import { FieldError, useForm } from "react-hook-form";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { PageProps } from '@/types';
 import { Head } from "@inertiajs/react";
-import { useForm as useInertiaForm } from '@inertiajs/react'; // Only use Inertia's useForm when needed
+import { useForm as useInertiaForm } from '@inertiajs/react';
 import { router } from '@inertiajs/react'
 
-export default function BrinquedosForm({ brinquedo, tipos, auth }: PageProps<{ brinquedo: any, tipos: Array<any>, auth: any }>) {
-  // React Hook Form
+export default function Brinquedos({ brinquedo, tipos, auth }: PageProps<{ brinquedo: any, tipos: Array<any>, auth: any }>) {
   const { register, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
-      codigo: brinquedo?.codigo || '',
+      id: brinquedo?.id || null,
+      codigo_unico: brinquedo?.codigo_unico || '',
       nome: brinquedo?.nome || '',
       tipo: brinquedo?.tipo || '',
       marca: brinquedo?.marca || '',
@@ -21,17 +21,16 @@ export default function BrinquedosForm({ brinquedo, tipos, auth }: PageProps<{ b
       valor_locacao: brinquedo?.valor_locacao || '',
     }
   });
-  
-  // Message state for success or error
-  const [message, setMessage] = useState("");
 
-  // Inertia Form for submission
+
+  const [message, setMessage] = useState("");
   const { post, put, processing } = useInertiaForm();
 
   const submitForm = (data: any) => {
-    if (brinquedo) {
+    if (brinquedo?.id) {
       router.put(`/brinquedosUpdate/${brinquedo.id}`, data, {
         onSuccess: (response) => {
+          setMessage('Brinquedo atualizado com sucesso!');
         },
         onError: (errors: any) => {
           setMessage(errors.message || "Ocorreu um erro inesperado.");
@@ -40,6 +39,7 @@ export default function BrinquedosForm({ brinquedo, tipos, auth }: PageProps<{ b
     } else {
       router.post('/brinquedosStore', data, {
         onSuccess: (response) => {
+          setMessage('Brinquedo cadastrado com sucesso!');
         },
         onError: (errors: any) => {
           setMessage(errors.message || "Ocorreu um erro inesperado.");
@@ -59,6 +59,16 @@ export default function BrinquedosForm({ brinquedo, tipos, auth }: PageProps<{ b
           <CardHeader></CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(submitForm)}>
+            <div className="mb-4">
+              <label htmlFor="codigo_unico" className="block text-sm font-medium">Código</label>
+              <Input
+                id="codigo_unico"
+                className="w-full"
+                {...register("codigo_unico", { required: "O código é obrigatório" })}
+              />
+              {errors.codigo_unico && <p className="text-red-500 text-sm">{(errors.codigo_unico as FieldError)?.message}</p>}
+            </div>
+
             <div className="mb-4">
               <label htmlFor="nome" className="block text-sm font-medium">Nome</label>
               <Input
@@ -119,13 +129,12 @@ export default function BrinquedosForm({ brinquedo, tipos, auth }: PageProps<{ b
               {errors.valor_locacao && <p className="text-red-500 text-sm">{(errors.valor_locacao as FieldError)?.message}</p>}
             </div>
 
-
-              <Button type="submit" className="w-full" disabled={processing}>
-                {brinquedo ? "Atualizar Brinquedo" : "Cadastrar Brinquedo"}
-              </Button>
+            <Button type="submit" className="w-full" disabled={processing}>
+              {brinquedo?.id ? "Atualizar Brinquedo" : "Cadastrar Brinquedo"}
+            </Button>
             </form>
 
-            {message && <p className="mt-4 text-green-600">{message}</p>}
+            {message && <h3 className="mt-10 text-red-600 mt-20">{message}</h3>}
           </CardContent>
         </Card>
       </div>

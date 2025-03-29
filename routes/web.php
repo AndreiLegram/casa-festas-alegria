@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BrinquedosController;
 use App\Http\Controllers\TiposBrinquedosController;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -20,12 +21,11 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    if (Auth::check()) {
+        return redirect()->route('dashboard'); // Usuários autenticados vão para o dashboard
+    } else {
+        return redirect()->route('login'); // Usuários não autenticados vão para o login
+    }
 });
 
 Route::get('/dashboard', function () {
@@ -39,7 +39,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/cliente', [ClienteController::class, 'index'])->name('cliente.index');
+    Route::get('/clientes', [ClienteController::class, 'index'])->name('cliente.index');
     Route::get('/cliente/{cliente}', [ClienteController::class, 'edit'])->name('cliente.edit');
     Route::patch('/cliente', [ClienteController::class, 'update'])->name('cliente.update');
     Route::delete('/cliente', [ClienteController::class, 'destroy'])->name('cliente.destroy');
@@ -47,7 +47,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/brinquedos', [BrinquedosController::class, 'index'])->name('brinquedos');
-    Route::get('/brinquedosForm/{id?}', [BrinquedosController::class, 'form'])->name('brinquedosForm');
+    Route::get('/brinquedo/{id?}', [BrinquedosController::class, 'form'])->name('brinquedo');
     Route::post('/brinquedosStore', [BrinquedosController::class, 'store'])->name('brinquedosStore');
     Route::put('/brinquedosUpdate/{id}', [BrinquedosController::class, 'update'])->name('brinquedosUpdate');
     Route::delete('/brinquedos/{brinquedo}', [BrinquedosController::class, 'destroy'])->name('brinquedosDelete');
