@@ -9,13 +9,13 @@ class FuncionariosController extends Controller {
 
     public function index()
     {
-        $funcionarios = Funcionario::all();  
+        $funcionarios = User::all();  
         return response()->json($funcionarios);  
     }
 
     public function show($id)
     {
-        $funcionario = Funcionario::find($id);
+        $funcionario = User::find($id);
 
         if (!$funcionario) {
             return response()->json(['message' => 'Funcionario não encontrado'], 404);
@@ -32,13 +32,13 @@ class FuncionariosController extends Controller {
             'funcao' => 'required|string',
         ]);
 
-        $funcionario = Funcionario::create($validated); 
+        $funcionario = User::create($validated); 
         return response()->json($funcionario, 201); 
     }
 
     public function update(Request $request, $id)
     {
-        $funcionario = Funcionario::find($id);
+        $funcionario = User::find($id);
 
         if (!$funcionario) {
             return response()->json(['message' => 'Funcionario não encontrado'], 404);
@@ -56,7 +56,7 @@ class FuncionariosController extends Controller {
 
     public function destroy($id)
     {
-        $funcionario = Funcionario::find($id);
+        $funcionario = User::find($id);
 
         if (!$funcionario) {
             return response()->json(['message' => 'Funcionario não encontrado'], 404);
