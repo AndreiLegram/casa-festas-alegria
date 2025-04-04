@@ -8,7 +8,6 @@ import { User } from '@/types';
 
 export default function Authenticated({ user, header, children }: PropsWithChildren<{ user: User, header?: ReactNode }>) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
-    console.log(user);
     return (
         <div className="min-h-screen bg-gray-100">
             <nav className="bg-white border-b border-gray-100">
@@ -32,11 +31,11 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                                     Brinquedos
                                 </NavLink>
                                 )}
-                                {(user.permission_level === 'gerente' || user.permission_level === 'agente_locacao') && (
+                                {/* {(user.permission_level === 'gerente' || user.permission_level === 'agente_locacao') && (
                                     <NavLink href={route('locacoes')} active={route().current('locacoes')}>
                                     Locações
                                 </NavLink>
-                                )}
+                                )} */}
                                 {(user.permission_level === 'gerente' || user.permission_level === 'analista_cadastro') && (
                                     <NavLink href={route('cliente.index')} active={route().current('cliente.index')}>
                                     Cliente
