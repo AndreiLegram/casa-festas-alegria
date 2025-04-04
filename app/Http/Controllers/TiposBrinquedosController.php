@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\TipoBrinquedo; 
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Auth;
 
 class TiposBrinquedosController extends Controller {
     
@@ -19,6 +20,7 @@ class TiposBrinquedosController extends Controller {
 
     public function form($id = null)
     {
+        dd(Auth::user()->name);
         $tipoBrinquedo = $id ? TipoBrinquedo::find($id) : null;
 
         return Inertia::render('tiposBrinquedos/tipoBrinquedo', [

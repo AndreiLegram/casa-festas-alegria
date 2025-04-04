@@ -4,6 +4,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BrinquedosController;
 use App\Http\Controllers\TiposBrinquedosController;
+use App\Http\Controllers\FuncionariosController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -59,6 +60,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/tipoBrinquedoSave', [TiposBrinquedosController::class, 'store'])->name('tipoBrinquedoSave');
     Route::put('/tiposBrinquedos/{id?}', [TiposBrinquedosController::class, 'update'])->name('tipoBrinquedoSave');
     Route::delete('/tiposBrinquedos', [TiposBrinquedosController::class, 'destroy'])->name('tipoBrinquedoDelete');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/funcionarios', [FuncionariosController::class, 'index'])->name('funcionarios');
+    Route::get('/funcionario/{id?}', [FuncionariosController::class, 'form'])->name('funcionario');
+    Route::post('/funcionariosSave', [FuncionariosController::class, 'store'])->name('funcionariosSave');
+    Route::put('/funcionariosUpdate/{id?}', [FuncionariosController::class, 'update'])->name('funcionariosUpdate');
+    Route::delete('/funcionarios/{funcionario}', [FuncionariosController::class, 'destroy'])->name('funcionariosDelete');
 });
 
 require __DIR__.'/auth.php';
