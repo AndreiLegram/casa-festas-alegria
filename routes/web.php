@@ -64,10 +64,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/funcionarios', [FuncionariosController::class, 'index'])->name('funcionarios');
-    Route::get('/funcionarios/{id?}', [FuncionariosController::class, 'form'])->name('tipoBrinquedo');
-    Route::post('/funcionarioSave', [FuncionariosController::class, 'store'])->name('funcionarioSave');
-    Route::put('/funcionarios/{id?}', [FuncionariosController::class, 'update'])->name('functionarioSave');
-    Route::delete('/funcionarios', [FuncionariosController::class, 'destroy'])->name('functionarioDelete');
+    Route::get('/funcionario/{id?}', [FuncionariosController::class, 'form'])->name('funcionario');
+    Route::post('/funcionariosSave', [FuncionariosController::class, 'store'])->name('funcionariosSave');
+    Route::put('/funcionariosUpdate/{id?}', [FuncionariosController::class, 'update'])->name('funcionariosUpdate');
+    Route::delete('/funcionarios/{funcionario}', [FuncionariosController::class, 'destroy'])->name('funcionariosDelete');
 });
 
 require __DIR__.'/auth.php';

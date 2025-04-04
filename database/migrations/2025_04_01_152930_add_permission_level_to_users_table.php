@@ -14,10 +14,9 @@ class AddPermissionLevelToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('permission_level')->default('gerente'); // Adiciona a coluna 'permission_level' com valor default 'user'
-            $table->string('cpf')->unique(); 
-            $table->string('nome'); 
-            $table->string('telefone');
+            $table->string('permission_level')->default('gerente');
+            $table->string('cpf'); 
+            $table->string('telefone')->nullable();
         });
     }
 
@@ -29,9 +28,8 @@ class AddPermissionLevelToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('permission_level'); // Remove a coluna 'permission_level' caso a migration seja revertida
+            $table->dropColumn('permission_level');
             $table->dropColumn('cpf'); 
-            $table->dropColumn('nome'); 
             $table->dropColumn('telefone');
         });
     }
