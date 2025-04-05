@@ -56,15 +56,13 @@ class TiposBrinquedosController extends Controller {
         return $this->index();  
     }
 
-    public function destroy(Request $request)
+    public function destroy($id)
     {
-        $content = $request->getContent();
-        $id = json_decode($content, true); 
-
-        $tipoBrinquedo = TipoBrinquedo::find($data->id);
+        dd($id);
+        $tipoBrinquedo = TipoBrinquedo::find($id);
 
         if (!$tipoBrinquedo) {
-            return $this->index();  
+            return response()->json(['message' => 'Brinquedo não encontrado'], 404); 
         }
 
         $tipoBrinquedo->delete();

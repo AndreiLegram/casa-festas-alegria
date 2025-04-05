@@ -24,8 +24,8 @@ export default function Funcionarios({ funcionarios, auth, mustVerifyEmail, stat
       header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Funcionarios</h2>}
     >
       <Head title="Funcionarios" />
-      <section style={{ display: 'flex', justifyContent: 'center' }}>
-        <div className="py-12">
+      <section style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+      <div className="py-12 w-full max-w-7xl mx-auto sm:px-6 lg:px-8">
           <Link href="/funcionario">
             <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md mb-10">
               Cadastrar Novo Funcionario
@@ -36,16 +36,16 @@ export default function Funcionarios({ funcionarios, auth, mustVerifyEmail, stat
               <TableCaption>Listagem dos funcionarios cadastrados.</TableCaption>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="px-6">Nome</TableHead>
-                  <TableHead className="px-6">Permissão</TableHead>
+                  <TableHead>Nome</TableHead>
+                  <TableHead>Permissão</TableHead>
                   <TableHead className="px-6 text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {funcionarios.map((funcionario) => (
                   <TableRow key={funcionario.id}>
-                    <TableCell className="px-6">{funcionario.name}</TableCell>
-                    <TableCell className="px-6">{funcionario.permission_level}</TableCell>
+                    <TableCell>{funcionario.name}</TableCell>
+                    <TableCell>{funcionario.permission_level}</TableCell>
                     <TableCell className="text-right flex space-x-2 justify-end px-6">
                       <Link href={`/funcionario/${funcionario.id}`}>
                         <button className="px-4 py-2 mr-10 bg-yellow-500 text-white rounded-md">

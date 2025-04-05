@@ -16,19 +16,18 @@ class ClienteController extends Controller {
         ]);
     }
 
-    public function show($id)
+    public function form($id = null)
     {
-        $cliente = Cliente::find($id);
+        $cliente = $id ? Cliente::find($id) : null ;
 
-        if (!$cliente) {
-            return Inertia::render(['message' => 'cliente não encontrado'], 404);
-        }
-
-        return Inertia::render($cliente);
+        return Inertia::render('clientes/Cliente', [
+            'cliente' => $cliente,
+        ]);
     }
 
     public function store(Request $request)
-    {
+    {   
+        dd($request);
         $validated = $request->validate([
             'cpf' => 'required|string|max:15',
             'nome' => 'required|string|max:255'

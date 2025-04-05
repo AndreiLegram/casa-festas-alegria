@@ -10,7 +10,7 @@ export default function TiposBrinquedos({ tiposBrinquedos, auth, mustVerifyEmail
   const handleDelete = async (id: number) => {
     if (confirm('Tem certeza que deseja excluir esse tipo de brinquedo?')) {
       try {
-        await axios.delete(route('tiposBrinquedos', id));
+        await axios.delete(route('tipoBrinquedoDelete', id));
         window.location.reload();
       } catch (error) {
         console.error("Erro:", error);
