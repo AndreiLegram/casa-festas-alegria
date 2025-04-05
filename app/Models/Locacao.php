@@ -18,6 +18,7 @@ class Locacao extends Model
     ];
 
     protected $dates = ['data', 'data_devolucao'];
+    protected $table = 'locacoes';
 
     public function locacaoItems()
     {

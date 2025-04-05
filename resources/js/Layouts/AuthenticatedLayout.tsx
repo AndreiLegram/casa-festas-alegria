@@ -31,14 +31,14 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                                     Brinquedos
                                 </NavLink>
                                 )}
-                                {/* {(user.permission_level === 'gerente' || user.permission_level === 'agente_locacao') && (
+                                {(user.permission_level === 'gerente' || user.permission_level === 'agente_locacao') && (
                                     <NavLink href={route('locacoes')} active={route().current('locacoes')}>
                                     Locações
                                 </NavLink>
-                                )} */}
+                                )}
                                 {(user.permission_level === 'gerente' || user.permission_level === 'analista_cadastro') && (
                                     <NavLink href={route('cliente.index')} active={route().current('cliente.index')}>
-                                    Cliente
+                                    Clientes
                                 </NavLink>
                                 )}
                                 {user.permission_level === 'gerente' && (
@@ -77,7 +77,6 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                                     </Dropdown.Trigger>
 
                                     <Dropdown.Content>
-                                        <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
                                         <Dropdown.Link href={route('logout')} method="post" as="button">
                                             Log Out
                                         </Dropdown.Link>
@@ -131,7 +130,6 @@ export default function Authenticated({ user, header, children }: PropsWithChild
                         </div>
 
                         <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>Profile</ResponsiveNavLink>
                             <ResponsiveNavLink method="post" href={route('logout')} as="button">
                                 Log Out
                             </ResponsiveNavLink>

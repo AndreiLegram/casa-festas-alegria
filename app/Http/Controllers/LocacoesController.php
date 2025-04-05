@@ -2,30 +2,44 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brinquedo;
+use App\Models\Cliente;
 use Illuminate\Http\Request;
-use App\Models\Locacao; 
+use App\Models\Locacao;
+use Inertia\Inertia;
 
 class LocacoesController extends Controller {
 
     public function index()
     {
         $locacoes = Locacao::all();  
+        return Inertia::render('locacao/locacoes', [
+            'locacoes' => $locacoes
+        ]);
         return response()->json($locacoes);  
     }
 
-    public function show($id)
-    {
-        $locacao = Locacao::find($id);
-        
-        if (!$locacao) {
-            return response()->json(['message' => 'Locação não encontrado'], 404);
-        }
-        
-        return response()->json($locacao);
+    public function form($id = null)
+{
+    $locacao = $id ? Locacao::with('brinquedo')->find($id) : null;
+
+    if ($id && !$locacao) {
+        return response()->json(['message' => 'Locação não encontrada'], 404);
     }
+
+    $brinquedosDisponiveis = Brinquedo::all(); //filtrar por status
+    $clientes = Cliente::all();
+
+    return Inertia::render('locacao/locacao', [
+        'locacao' => $locacao,
+        'brinquedos' => $brinquedosDisponiveis,
+        'clientes' => $clientes,
+    ]);
+}
 
     public function store(Request $request)
     {
+        dd($request);
         $validated = $request->validate([
             'codigo' => 'required|string|max:255',
             'data' => 'required|date',
