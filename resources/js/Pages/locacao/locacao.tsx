@@ -8,13 +8,13 @@ import { PageProps } from '@/types';
 import { Head, router } from "@inertiajs/react";
 
 type LocacaoItem = {
-  brinquedo_id: string;
+  id_brinquedo: string;
 };
 
 type LocacaoFormData = {
-  cliente_id: string;
-  data_inicio: string;
-  data_fim: string;
+  id_contato: string;
+  data: string;
+  data_devolucao: string;
   valor_total: string;
   itens: LocacaoItem[];
 };
@@ -30,6 +30,9 @@ export default function Locacoes({
   brinquedos: Array<any>, 
   auth: any 
 }>) {
+  const today = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
+console.log(locacao);
+
   const {
     register,
     handleSubmit,
@@ -37,11 +40,11 @@ export default function Locacoes({
     formState: { errors },
   } = useForm<LocacaoFormData>({
     defaultValues: {
-      cliente_id: locacao?.cliente_id ?? '',
-      data_inicio: locacao?.data_inicio ?? '',
-      data_fim: locacao?.data_fim ?? '',
+      id_contato: locacao?.id_contato ?? '',
+      data: locacao?.data ?? today,
+      data_devolucao: locacao?.data_devolucao ?? '',
       valor_total: locacao?.valor_total ?? '',
-      itens: [],
+      itens: locacao?.itens ?? []
     },
   });
 
@@ -56,7 +59,7 @@ export default function Locacoes({
     if (locacao?.itens && locacao.itens.length > 0) {
       setItens(locacao.itens);
       const total = locacao.itens.reduce((acc, item) => {
-        const brinquedo = brinquedos.find(b => b.id === item.brinquedo_id);
+        const brinquedo = brinquedos.find(b => b.id === item.id_brinquedo);
         return brinquedo ? acc + parseFloat(brinquedo.valor_locacao) : acc;
       }, 0);
       setValorTotal(total);
@@ -66,7 +69,7 @@ export default function Locacoes({
 
   const atualizarValorTotal = (novosItens: LocacaoItem[]) => {
     const total = novosItens.reduce((acc, item) => {
-      const brinquedo = brinquedos.find(b => b.id === item.brinquedo_id);
+      const brinquedo = brinquedos.find(b => b.id === item.id_brinquedo);
       return brinquedo ? acc + parseFloat(brinquedo.valor_locacao) : acc;
     }, 0);
     setValorTotal(total);
@@ -77,7 +80,7 @@ export default function Locacoes({
     if (itemSelecionado !== '') {
       const brinquedo = brinquedos.find(b => b.id === itemSelecionado);
       if (brinquedo) {
-        const novosItens = [...itens, { brinquedo_id: brinquedo.id }];
+        const novosItens = [...itens, { id_brinquedo: brinquedo.id }];
         setItens(novosItens);
         atualizarValorTotal(novosItens);
         setItemSelecionado('');
@@ -144,10 +147,10 @@ export default function Locacoes({
             <form onSubmit={handleSubmit(submitForm)}>
               {/* Cliente */}
               <div className="mb-4">
-                <label htmlFor="cliente_id" className="block text-sm font-medium">Cliente</label>
+                <label htmlFor="id_contato" className="block text-sm font-medium">Cliente</label>
                 <select
-                  id="cliente_id"
-                  {...register("cliente_id", { required: "O cliente é obrigatório" })}
+                  id="id_contato"
+                  {...register("id_contato", { required: "O cliente é obrigatório" })}
                   className="w-full"
                 >
                   <option value="">Selecione o Cliente</option>
@@ -155,29 +158,31 @@ export default function Locacoes({
                     <option key={cliente.id} value={cliente.id}>{cliente.nome}</option>
                   ))}
                 </select>
-                {errors.cliente_id && <p className="text-red-500 text-sm">{(errors.cliente_id as FieldError)?.message}</p>}
+                {errors.id_contato && <p className="text-red-500 text-sm">{(errors.id_contato as FieldError)?.message}</p>}
               </div>
 
               {/* Datas */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="data_inicio" className="block text-sm font-medium">Data de Início</label>
+                  <label htmlFor="data" className="block text-sm font-medium">Data de Início</label>
                   <Input
-                    id="data_inicio"
+                    id="data"
                     type="date"
-                    {...register("data_inicio", { required: "A data de início é obrigatória" })}
+                    value={today}
+                    readOnly
+                    {...register("data")}
                   />
-                  {errors.data_inicio && <p className="text-red-500 text-sm">{(errors.data_inicio as FieldError)?.message}</p>}
+                  {errors.data && <p className="text-red-500 text-sm">{(errors.data as FieldError)?.message}</p>}
                 </div>
 
                 <div>
-                  <label htmlFor="data_fim" className="block text-sm font-medium">Data de Fim</label>
+                  <label htmlFor="data_devolucao" className="block text-sm font-medium">Data de Devolução</label>
                   <Input
-                    id="data_fim"
+                    id="data_devolucao"
                     type="date"
-                    {...register("data_fim", { required: "A data de fim é obrigatória" })}
+                    {...register("data_devolucao", { required: "A Data de Devolução é obrigatória" })}
                   />
-                  {errors.data_fim && <p className="text-red-500 text-sm">{(errors.data_fim as FieldError)?.message}</p>}
+                  {errors.data_devolucao && <p className="text-red-500 text-sm">{(errors.data_devolucao as FieldError)?.message}</p>}
                 </div>
               </div>
 
@@ -215,7 +220,7 @@ export default function Locacoes({
                 {itens.length > 0 && (
                   <ul className="mt-2 border rounded p-2 bg-gray-50">
                     {itens.map((item, index) => {
-                      const brinquedo = brinquedos.find(b => b.id === item.brinquedo_id);
+                      const brinquedo = brinquedos.find(b => b.id === item.id_brinquedo);
                       return (
                         <li key={index} className="flex justify-between items-center mb-1">
                           <span>

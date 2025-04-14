@@ -42,7 +42,8 @@ export default function Brinquedos({ brinquedos, auth, mustVerifyEmail, status }
                   <TableHead className="px-6">Marca</TableHead>
                   <TableHead className="px-6">Data de Aquisição</TableHead>
                   <TableHead className="px-6">Valor da Locação</TableHead>
-                  <TableHead className="px-6 text-right">Ações</TableHead>
+                  <TableHead className="px-6">Situação</TableHead>
+                  <TableHead className="px-6 text-center">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -56,6 +57,7 @@ export default function Brinquedos({ brinquedos, auth, mustVerifyEmail, status }
                       {new Date(brinquedo.data_aquisicao).toLocaleDateString('pt-BR')}
                     </TableCell>
                     <TableCell className="px-6">{brinquedo.valor_locacao}</TableCell>
+                    <TableCell className="px-6">{brinquedo.situacao}</TableCell>
                     <TableCell className="text-right flex space-x-2 justify-end px-6">
                       <Link href={`/brinquedo/${brinquedo.id}`}>
                         <button className="px-4 py-2 mr-10 bg-yellow-500 text-white rounded-md">

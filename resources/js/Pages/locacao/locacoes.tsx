@@ -49,7 +49,7 @@ export default function Locacoes({ locacoes, auth }: PageProps<{ locacoes: Array
                   <TableHead className="px-6">Valor Total</TableHead>
                   <TableHead className="px-6">Data Devolução</TableHead>
                   <TableHead className="px-6">Data Pagamento</TableHead>
-                  <TableHead className="px-6 text-right">Ações</TableHead>
+                  <TableHead className="px-6 text-center">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -57,22 +57,24 @@ export default function Locacoes({ locacoes, auth }: PageProps<{ locacoes: Array
                   <TableRow key={locacao.id}>
                     <TableCell className="px-6">{locacao.codigo}</TableCell>
                     <TableCell className="px-6">{new Date(locacao.data).toLocaleDateString('pt-BR')}</TableCell>
-                    <TableCell className="px-6">{locacao.contato?.nome || 'N/A'}</TableCell>
+                    <TableCell className="px-6">{locacao.id_contato ? locacao.id_contato : 'N/A'}</TableCell>
                     <TableCell className="px-6">R$ {Number(locacao.valor_total).toFixed(2)}</TableCell>
                     <TableCell className="px-6">{new Date(locacao.data_devolucao).toLocaleDateString('pt-BR')}</TableCell>
-                    <TableCell className="px-6">{new Date(locacao.data_pagamento).toLocaleDateString('pt-BR')}</TableCell>
+                    <TableCell className="px-6">{locacao.data_pagamento ? new Date(locacao.data_pagamento).toLocaleDateString('pt-BR') : 'Pendente'}</TableCell>
                     <TableCell className="text-right flex space-x-2 justify-end px-6">
-                      <Link href={`/locacoes/edit/${locacao.id}`}>
+                    <Link href={`/locacao/${locacao.id}`}>
+                        <button className="px-4 py-2 mr-10 bg-green-500 text-white rounded-md">
+                          Pagar
+                        </button>
+                      </Link>
+                      <Link href={`/locacao/${locacao.id}`}>
                         <button className="px-4 py-2 mr-10 bg-yellow-500 text-white rounded-md">
                           Editar
                         </button>
                       </Link>
-                      <button
-                        onClick={() => handleDelete(locacao.id)}
-                        className="px-4 py-2 bg-red-500 text-white rounded-md"
-                      >
-                        Deletar
-                      </button>
+                        <button onClick={() => handleDelete(locacao.id)} className="px-4 py-2 bg-red-500 text-white rounded-md">
+                          Deletar
+                        </button>
                     </TableCell>
                   </TableRow>
                 ))}

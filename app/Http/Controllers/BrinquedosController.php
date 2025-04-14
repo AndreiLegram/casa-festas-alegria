@@ -14,6 +14,12 @@ class BrinquedosController extends Controller
     public function index()
     {
         $brinquedos = Brinquedo::all();
+        foreach ($brinquedos as $brinquedo) {
+            $tipo = TipoBrinquedo::find($brinquedo->tipo);
+            if ($tipo) {
+                $brinquedo->tipo = $tipo->nome;
+            }
+        }
         return Inertia::render('brinquedos/brinquedos', [
             'brinquedos' => $brinquedos
         ]);

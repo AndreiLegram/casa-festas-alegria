@@ -16,6 +16,8 @@ class LocacaoItem extends Model
         'quantidade'
     ];
 
+    protected $table = 'locacoes_item';
+
     public function locacao()
     {
         return $this->belongsTo(Locacao::class, 'id_locacao');

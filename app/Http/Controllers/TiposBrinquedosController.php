@@ -20,7 +20,6 @@ class TiposBrinquedosController extends Controller {
 
     public function form($id = null)
     {
-        dd(Auth::user()->name);
         $tipoBrinquedo = $id ? TipoBrinquedo::find($id) : null;
 
         return Inertia::render('tiposBrinquedos/tipoBrinquedo', [
@@ -58,7 +57,6 @@ class TiposBrinquedosController extends Controller {
 
     public function destroy($id)
     {
-        dd($id);
         $tipoBrinquedo = TipoBrinquedo::find($id);
 
         if (!$tipoBrinquedo) {

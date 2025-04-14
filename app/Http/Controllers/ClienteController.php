@@ -27,14 +27,16 @@ class ClienteController extends Controller {
 
     public function store(Request $request)
     {   
-        dd($request);
         $validated = $request->validate([
             'cpf' => 'required|string|max:15',
+            'data_nascimento' => 'date',
+            'endereco' => 'string|max:255',    
+            'telefone' => 'string|max:255',    
             'nome' => 'required|string|max:255'
         ]);
-
+        
         $cliente = Cliente::create($validated); 
-        return Inertia::render($cliente, 201); 
+        return $this->index();
     }
 
     public function update(Request $request, $id)
@@ -51,11 +53,12 @@ class ClienteController extends Controller {
         ]);
 
         $cliente->update($validated); 
-        return Inertia::render($cliente); 
+        return $this->index();
     }
 
     public function destroy($id)
     {
+        dd($id);
         $cliente = Cliente::find($id);
 
         if (!$cliente) {

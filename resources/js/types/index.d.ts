@@ -2,6 +2,8 @@ export interface User {
     id: number;
     name: string;
     email: string;
+    cpf: string;
+    telefone: string;
     permission_level: string;
     email_verified_at: string;
 }

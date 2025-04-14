@@ -22,7 +22,6 @@ class FuncionariosController extends Controller {
     public function form($id = null)
     {
         $funcionario = $id ? User::find($id) : null;
-
         return Inertia::render('funcionarios/funcionario', [
             'funcionario' => $funcionario
         ]);
@@ -42,6 +41,7 @@ class FuncionariosController extends Controller {
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'telefone' => 'string|max:50',
             'name' => 'required|string|max:255',
             'password' => 'required|string|min:8',
             'email' => 'required|string|max:255',
@@ -67,6 +67,7 @@ class FuncionariosController extends Controller {
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'telefone' => 'string|max:50',
             'password' => 'required|string|min:8',
             'email' => 'required|string|max:255',
             'cpf' => 'required|string|max:15',
