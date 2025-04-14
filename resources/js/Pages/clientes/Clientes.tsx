@@ -16,7 +16,7 @@ import { formatCPF } from '@/lib/utils';
 const handleDelete = async (id: number) => {
   if (confirm('Tem certeza que deseja excluir esse cliente?')) {
     try {
-      await axios.delete(route('clientes', id));
+      await axios.delete(`/clientesDelete/${id}`);
       window.location.reload();
     } catch (error) {
       console.error("Erro:", error);

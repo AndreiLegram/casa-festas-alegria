@@ -45,7 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/cliente/{cliente?}', [ClienteController::class, 'form'])->name('cliente');
     Route::post('/clienteStore', [ClienteController::class, 'store'])->name('clienteStore');
     Route::put('/clienteUpdate/{id}', [ClienteController::class, 'update'])->name('clienteUpdate');
-    Route::delete('/cliente', [ClienteController::class, 'destroy'])->name('clienteDelete');
+    Route::delete('/clientesDelete/{id}', [ClienteController::class, 'destroy']);
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -61,7 +61,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tipoBrinquedo/{id?}', [TiposBrinquedosController::class, 'form'])->name('tipoBrinquedo');
     Route::post('/tipoBrinquedoSave', [TiposBrinquedosController::class, 'store'])->name('tipoBrinquedoSave');
     Route::put('/tiposBrinquedos/{id?}', [TiposBrinquedosController::class, 'update'])->name('tipoBrinquedoSave');
-    Route::delete('/tiposBrinquedos/{id}', [TiposBrinquedosController::class, 'destroy'])->name('tipoBrinquedoDelete');
+    Route::delete('/tipoBrinquedoDelete/{brinquedo}', [TiposBrinquedosController::class, 'destroy'])->name('tipoBrinquedoDelete');
 });
 
 Route::middleware(['auth'])->group(function () {

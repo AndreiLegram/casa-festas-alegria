@@ -28,6 +28,8 @@ export default function Funcionarios({ funcionario, auth }: PageProps<{ funciona
 
   const submitForm = (data: any) => {
     if (funcionario?.id) {
+      console.log("funcionario", funcionario);
+
       router.put(`/funcionariosUpdate/${funcionario.id}`, data, {
         onSuccess: (response) => {
           setMessage('Funcionario atualizado com sucesso!');
@@ -111,6 +113,7 @@ export default function Funcionarios({ funcionario, auth }: PageProps<{ funciona
               <Input
                 id="telefone"
                 className="w-full"
+                {...register("telefone", { maxLength: 50 })}
               />
               {errors.telefone && <p className="text-red-500 text-sm">{(errors.telefone as FieldError)?.message}</p>}
             </div>
@@ -122,7 +125,7 @@ export default function Funcionarios({ funcionario, auth }: PageProps<{ funciona
                 className="w-full"
                 {...register("password", { required: "A senha é obrigatório" })}
               />
-              {errors.cpf && <p className="text-red-500 text-sm">{(errors.password as FieldError)?.message}</p>}
+              {errors.password && <p className="text-red-500 text-sm">{(errors.password as FieldError)?.message}</p>}
             </div>
 
             <Button type="submit" className="w-full" disabled={processing}>
