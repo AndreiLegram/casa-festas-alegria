@@ -23,24 +23,25 @@ class ClienteController extends Controller {
 
     public function show($id)
     {
-        $cliente = Cliente::find($id);
+        $cliente = $id ? Cliente::find($id) : null ;
 
-        if (!$cliente) {
-            return Inertia::render(['message' => 'cliente não encontrado'], 404);
-        }
-
-        return Inertia::render($cliente);
+        return Inertia::render('clientes/Cliente', [
+            'cliente' => $cliente,
+        ]);
     }
 
     public function store(Request $request)
-    {
+    {   
         $validated = $request->validate([
             'cpf' => 'required|string|max:15',
+            'data_nascimento' => 'date',
+            'endereco' => 'string|max:255',    
+            'telefone' => 'string|max:255',    
             'nome' => 'required|string|max:255'
         ]);
-
+        
         $cliente = Cliente::create($validated); 
-        return Inertia::render($cliente, 201); 
+        return $this->index();
     }
 
     public function update(Request $request, $id)
@@ -57,7 +58,7 @@ class ClienteController extends Controller {
         ]);
 
         $cliente->update($validated); 
-        return Inertia::render($cliente); 
+        return $this->index();
     }
 
     public function destroy($id)

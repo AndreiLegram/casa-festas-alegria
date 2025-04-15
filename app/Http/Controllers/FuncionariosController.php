@@ -4,18 +4,32 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Funcionario; 
+use App\Models\User; 
+use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class FuncionariosController extends Controller {
 
     public function index()
     {
-        $funcionarios = Funcionario::all();  
-        return response()->json($funcionarios);  
+        $funcionarios = User::all();  
+        return Inertia::render('funcionarios/funcionarios', [
+            'funcionarios' => $funcionarios
+        ]);
+    }
+
+    public function form($id = null)
+    {
+        $funcionario = $id ? User::find($id) : null;
+        return Inertia::render('funcionarios/funcionario', [
+            'funcionario' => $funcionario
+        ]);
     }
 
     public function show($id)
     {
-        $funcionario = Funcionario::find($id);
+        $funcionario = User::find($id);
 
         if (!$funcionario) {
             return response()->json(['message' => 'Funcionario não encontrado'], 404);
@@ -27,36 +41,46 @@ class FuncionariosController extends Controller {
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nome' => 'required|string|max:255',
+            'telefone' => 'string|max:50',
+            'name' => 'required|string|max:255',
+            'password' => 'required|string|min:8',
+            'email' => 'required|string|max:255',
             'cpf' => 'required|string|max:15',
-            'funcao' => 'required|string',
+            'permission_level' => 'required|string',
         ]);
 
-        $funcionario = Funcionario::create($validated); 
-        return response()->json($funcionario, 201); 
+        $funcionario = User::create($validated); 
+        return $this->index();
     }
 
     public function update(Request $request, $id)
     {
-        $funcionario = Funcionario::find($id);
+        $funcionario = User::find($id);
 
         if (!$funcionario) {
+            return Inertia::render('funcionarios/funcionario', [
+                'errors' => ['message' => 'Funcionario não encontradoo.'],
+                'funcionarios' => $request->all()
+            ]);
             return response()->json(['message' => 'Funcionario não encontrado'], 404);
         }
 
         $validated = $request->validate([
-            'nome' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'telefone' => 'string|max:50',
+            'password' => 'required|string|min:8',
+            'email' => 'required|string|max:255',
             'cpf' => 'required|string|max:15',
-            'funcao' => 'required|string',
+            'permission_level' => 'required|string',
         ]);
 
         $funcionario->update($validated); 
-        return response()->json($brinquedo); 
+        return $this->index();
     }
 
     public function destroy($id)
     {
-        $funcionario = Funcionario::find($id);
+        $funcionario = User::find($id);
 
         if (!$funcionario) {
             return response()->json(['message' => 'Funcionario não encontrado'], 404);

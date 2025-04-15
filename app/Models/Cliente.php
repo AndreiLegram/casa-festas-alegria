@@ -20,5 +20,4 @@ class Cliente extends Model
 
     protected $dates = ['data_nascimento'];
 
-    // Caso você queira algum comportamento personalizado para a model, pode adicionar métodos extras aqui
 }

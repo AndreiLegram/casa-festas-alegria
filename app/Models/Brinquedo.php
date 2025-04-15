@@ -17,6 +17,7 @@ class Brinquedo extends Model
         'marca',
         'data_aquisicao',
         'valor_locacao',
+        'situacao'
     ];
 
     // Se você estiver usando outros tipos de campo como 'data', pode ser necessário ajustar a formatação de datas
