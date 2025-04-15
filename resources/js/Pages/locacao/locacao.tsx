@@ -31,7 +31,6 @@ export default function Locacoes({
   auth: any 
 }>) {
   const today = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
-console.log(locacao);
 
   const {
     register,

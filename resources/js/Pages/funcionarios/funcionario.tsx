@@ -28,8 +28,6 @@ export default function Funcionarios({ funcionario, auth }: PageProps<{ funciona
 
   const submitForm = (data: any) => {
     if (funcionario?.id) {
-      console.log("funcionario", funcionario);
-
       router.put(`/funcionariosUpdate/${funcionario.id}`, data, {
         onSuccess: (response) => {
           setMessage('Funcionario atualizado com sucesso!');
