@@ -11,12 +11,17 @@ class ClienteController extends Controller {
     public function index()
     {
         $clientes = Cliente::all();  
-        return Inertia::render('clientes/Clientes', [
+        return Inertia::render('Cliente/Cliente', [
             'clientes' => $clientes
         ]);
     }
 
-    public function form($id = null)
+    public function create()
+    {
+        return Inertia::render('Cliente/Create');
+    }
+
+    public function show($id)
     {
         $cliente = $id ? Cliente::find($id) : null ;
 
@@ -58,7 +63,6 @@ class ClienteController extends Controller {
 
     public function destroy($id)
     {
-        dd($id);
         $cliente = Cliente::find($id);
 
         if (!$cliente) {

@@ -41,11 +41,12 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/clientes', [ClienteController::class, 'index'])->name('cliente.index');
-    Route::get('/cliente/{cliente?}', [ClienteController::class, 'form'])->name('cliente');
-    Route::post('/clienteStore', [ClienteController::class, 'store'])->name('clienteStore');
-    Route::put('/clienteUpdate/{id}', [ClienteController::class, 'update'])->name('clienteUpdate');
-    Route::delete('/clientesDelete/{id}', [ClienteController::class, 'destroy']);
+    Route::get('/cliente', [ClienteController::class, 'index'])->name('cliente.index');
+    Route::get('/cliente/create', [ClienteController::class, 'create'])->name('cliente.create');
+    Route::post('/cliente', [ClienteController::class, 'store'])->name('cliente.store');
+    Route::get('/cliente/{cliente}', [ClienteController::class, 'edit'])->name('cliente.edit');
+    Route::patch('/cliente', [ClienteController::class, 'update'])->name('cliente.update');
+    Route::delete('/cliente', [ClienteController::class, 'destroy'])->name('cliente.destroy');
 });
 
 Route::middleware(['auth'])->group(function () {
