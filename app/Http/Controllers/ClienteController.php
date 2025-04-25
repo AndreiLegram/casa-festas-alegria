@@ -49,6 +49,9 @@ class ClienteController extends Controller {
 
         $validated = $request->validate([
             'cpf' => 'required|string|max:15',
+            'data_nascimento' => 'date',
+            'endereco' => 'string|max:255',    
+            'telefone' => 'string|max:255',    
             'nome' => 'required|string|max:255'
         ]);
 

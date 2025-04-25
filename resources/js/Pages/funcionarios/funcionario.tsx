@@ -8,9 +8,10 @@ import { PageProps } from '@/types';
 import { Head } from "@inertiajs/react";
 import { useForm as useInertiaForm } from '@inertiajs/react';
 import { router } from '@inertiajs/react'
+import { formatCPF, maskPhone } from "@/lib/utils";
 
 export default function Funcionarios({ funcionario, auth }: PageProps<{ funcionario: any, auth: any }>) {
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm({
     defaultValues: {
       id: funcionario?.id || null,
       name: funcionario?.name || '',
@@ -22,6 +23,15 @@ export default function Funcionarios({ funcionario, auth }: PageProps<{ funciona
     }
   });
 
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = maskPhone(e.target.value);
+    setValue('telefone', formatted);
+  };
+
+  const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatCPF(e.target.value);
+    setValue('cpf', formatted);
+  };
 
   const [message, setMessage] = useState("");
   const { post, put, processing } = useInertiaForm();
@@ -85,6 +95,7 @@ export default function Funcionarios({ funcionario, auth }: PageProps<{ funciona
                 id="cpf"
                 className="w-full"
                 {...register("cpf", { required: "O cpf é obrigatório" })}
+                onChange={handleCpfChange}
               />
               {errors.cpf && <p className="text-red-500 text-sm">{(errors.cpf as FieldError)?.message}</p>}
             </div>
@@ -112,6 +123,7 @@ export default function Funcionarios({ funcionario, auth }: PageProps<{ funciona
                 id="telefone"
                 className="w-full"
                 {...register("telefone", { maxLength: 50 })}
+                onChange={handlePhoneChange}
               />
               {errors.telefone && <p className="text-red-500 text-sm">{(errors.telefone as FieldError)?.message}</p>}
             </div>
@@ -122,6 +134,7 @@ export default function Funcionarios({ funcionario, auth }: PageProps<{ funciona
                 id="password"
                 className="w-full"
                 {...register("password", { required: "A senha é obrigatório" })}
+                disabled={!!funcionario?.id} // desativa se estiver em modo de edição
               />
               {errors.password && <p className="text-red-500 text-sm">{(errors.password as FieldError)?.message}</p>}
             </div>

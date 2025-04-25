@@ -42,25 +42,28 @@ export default function Funcionarios({ funcionarios, auth, mustVerifyEmail, stat
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {funcionarios.map((funcionario) => (
-                  <TableRow key={funcionario.id}>
-                    <TableCell>{funcionario.name}</TableCell>
-                    <TableCell>{funcionario.permission_level}</TableCell>
-                    <TableCell className="text-right flex space-x-2 justify-end px-6">
-                      <Link href={`/funcionario/${funcionario.id}`}>
-                        <button className="px-4 py-2 mr-10 bg-yellow-500 text-white rounded-md">
-                          Editar
-                        </button>
-                      </Link>
+              {funcionarios.map((funcionario) => (
+                <TableRow key={funcionario.id}>
+                  <TableCell>{funcionario.name}</TableCell>
+                  <TableCell>{funcionario.permission_level}</TableCell>
+                  <TableCell className="text-right flex space-x-2 justify-end px-6">
+                    <Link href={`/funcionario/${funcionario.id}`}>
+                      <button className="px-4 py-2 bg-yellow-500 text-white rounded-md">
+                        Editar
+                      </button>
+                    </Link>
+
+                    {funcionario.permission_level.toLowerCase() !== 'gerente' && (
                       <button
                         onClick={() => handleDelete(funcionario.id)}
                         className="px-4 py-2 bg-red-500 text-white rounded-md"
                       >
                         Deletar
                       </button>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
               </TableBody>
             </Table>
           </div>
