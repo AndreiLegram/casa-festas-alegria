@@ -61,7 +61,6 @@ class ClienteController extends Controller {
 
     public function destroy($id)
     {
-        dd($id);
         $cliente = Cliente::find($id);
 
         if (!$cliente) {
@@ -69,6 +68,6 @@ class ClienteController extends Controller {
         }
 
         $cliente->delete();
-        return Inertia::render(['message' => 'cliente deletado com sucesso']);
+        return $this->index();
     }
 }

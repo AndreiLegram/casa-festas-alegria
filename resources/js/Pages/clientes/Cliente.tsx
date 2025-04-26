@@ -25,7 +25,7 @@ export default function ClienteForm({ cliente, auth }: PageProps<{ cliente: any,
 
   const submitForm = (data: any) => {
     if (cliente?.id) {
-      router.put(`//${cliente.id}`, data, {
+      router.put(`/clienteUpdate/${cliente.id}`, data, {
         onSuccess: () => setMessage('Cliente atualizado com sucesso!'),
         onError: (errors: any) => setMessage(errors.message || "Erro ao atualizar."),
       });
