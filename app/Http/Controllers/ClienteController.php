@@ -36,7 +36,7 @@ class ClienteController extends Controller {
         ]);
         
         $cliente = Cliente::create($validated); 
-        return $this->index();
+        return redirect()->route('cliente.index');
     }
 
     public function update(Request $request, $id)
@@ -56,7 +56,7 @@ class ClienteController extends Controller {
         ]);
 
         $cliente->update($validated); 
-        return $this->index();
+        return redirect()->route('cliente.index');
     }
 
     public function destroy($id)

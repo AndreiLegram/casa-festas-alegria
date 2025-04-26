@@ -35,7 +35,7 @@ class TiposBrinquedosController extends Controller {
         ]);
 
         $tipoBrinquedo = TipoBrinquedo::create($validated); 
-        return $this->index(); 
+        return redirect()->route('tiposBrinquedos'); 
     }
 
     public function update(Request $request, $id)
@@ -52,7 +52,7 @@ class TiposBrinquedosController extends Controller {
         ]);
 
         $tipoBrinquedo->update($validated); 
-        return $this->index();  
+        return redirect()->route('tiposBrinquedos');
     }
 
     public function destroy($id)
@@ -64,6 +64,6 @@ class TiposBrinquedosController extends Controller {
         }
 
         $tipoBrinquedo->delete();
-        return $this->index();  
+        return redirect()->route('tiposBrinquedos');  
     }
 }

@@ -133,8 +133,12 @@ export default function Funcionarios({ funcionario, auth }: PageProps<{ funciona
               <Input
                 id="password"
                 className="w-full"
-                {...register("password", { required: "A senha é obrigatório" })}
-                disabled={!!funcionario?.id} // desativa se estiver em modo de edição
+                {...register("password", {
+                  required: !funcionario?.id ? "A senha é obrigatória" : false,
+                })}
+                defaultValue={funcionario?.password ?? ''}
+                readOnly={!!funcionario?.id}
+
               />
               {errors.password && <p className="text-red-500 text-sm">{(errors.password as FieldError)?.message}</p>}
             </div>

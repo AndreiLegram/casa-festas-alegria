@@ -28,26 +28,40 @@ class LocacoesController extends Controller {
     public function form($id = null)
     {
         $locacao = $id ? Locacao::find($id) : null;
+
         if ($id && !$locacao) {
             return response()->json(['message' => 'Locação não encontrada'], 404);
         }
+
         if ($locacao) {
-            $locacao->itens = $locacao->locacaoItems()->with('brinquedo')->get();
-            foreach ($locacao->itens as $item) {
-                $brinquedo = Brinquedo::find($item->id_brinquedo);
-                if ($brinquedo) {
-                    $item->nome = $brinquedo->nome;
-                }
-            }
+            $locacao->itens = $locacao->locacaoItems()->with('brinquedo')->get()->map(function ($item) {
+                return [
+                    'id_brinquedo' => $item->id_brinquedo,
+                    'nome' => $item->brinquedo->nome ?? 'Brinquedo desconhecido'
+                ];
+            });
         }
+
+        // Brinquedos disponíveis
         $brinquedosDisponiveis = Brinquedo::where('situacao', 'disponivel')->get();
+
+        // Brinquedos já locados (mesmo que não estejam disponíveis)
+        $brinquedosLocados = $locacao 
+            ? Brinquedo::whereIn('id', $locacao->itens->pluck('id_brinquedo'))->get() 
+            : collect();
+
+        // Combina ambos e remove duplicados pelo ID
+        $brinquedos = $brinquedosDisponiveis->merge($brinquedosLocados)->unique('id');
+
         $clientes = Cliente::all();
+
         return Inertia::render('locacao/locacao', [
             'locacao' => $locacao,
-            'brinquedos' => $brinquedosDisponiveis,
+            'brinquedos' => $brinquedos,
             'clientes' => $clientes,
         ]);
     }
+
 
     public function store(Request $request)
     {
@@ -89,21 +103,22 @@ class LocacoesController extends Controller {
             return response()->json('Locação sem itens!', 400);
         }
 
-        return $this->index();
+        return redirect()->route('locacoes');
     }
 
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'codigo' => 'required|string|max:255',
             'data' => 'required|date',
+            'data_devolucao' => 'required|date',
             'id_contato' => 'required|exists:clientes,id',
             'valor_total' => 'required|numeric',
+            'data' => 'required|date',
             'data_devolucao' => 'required|date',
-            'itens_locacao' => 'array',
-            'itens_locacao.*.id_brinquedo' => 'required|exists:brinquedos,id',
-            'itens_locacao.*.quantidade' => 'required|integer|min:1',
-            'itens_locacao.*.valor_unitario' => 'required|integer',
+            'itens' => 'array',
+            'itens.*.id_brinquedo' => 'required|exists:brinquedos,id',
+            'itens.*.valor_unitario' => 'required|numeric',
+            'itens.*.quantidade' => 'required|integer|min:1',
         ]);
 
         $locacao = Locacao::find($id);
@@ -113,7 +128,6 @@ class LocacoesController extends Controller {
         }
 
         $locacao->update([
-            'codigo' => $validated['codigo'],
             'data' => $validated['data'],
             'id_contato' => $validated['id_contato'],
             'valor_total' => $validated['valor_total'],
@@ -122,13 +136,13 @@ class LocacoesController extends Controller {
 
         $locacao->locacaoItems()->delete();
 
-        if (isset($validated['itens_locacao']) && count($validated['itens_locacao']) > 0) {
-            foreach ($validated['itens_locacao'] as $item) {
+        if (isset($validated['itens']) && count($validated['itens']) > 0) {
+            foreach ($validated['itens'] as $item) {
                 $locacao->locacaoItems()->create([
                     'id_brinquedo' => $item['id_brinquedo'],
-                    'quantidade' => $item['quantidade'],
-                    'valor_unitario' => $item['valor_unitario'],
                     'id_locacao' => $locacao->id,
+                    'valor_unitario' => $item['valor_unitario'],
+                    'quantidade' => $item['quantidade']
                 ]);
             }
         } else {
@@ -136,7 +150,7 @@ class LocacoesController extends Controller {
         }
 
         
-        return response()->json($locacao->load('locacaoItems'), 200);
+        return redirect()->route('locacoes');
     }
 
     public function pagamento(Request $request, $id)
