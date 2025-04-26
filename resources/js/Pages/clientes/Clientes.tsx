@@ -49,7 +49,7 @@ export default function Cliente({ clientes, auth, mustVerifyEmail, status }: Pag
                   <TableHead className="px-6">Endereço</TableHead>
                   <TableHead className="px-6">Data de Nascimento</TableHead>
                   <TableHead className="px-6 text-right">Telefone</TableHead>
-                  <TableHead className="px-6 text-right">Ações</TableHead>
+                  <TableHead className="px-6 text-center">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -60,7 +60,7 @@ export default function Cliente({ clientes, auth, mustVerifyEmail, status }: Pag
                     <TableCell className="px-6">{cliente.endereco}</TableCell>
                     <TableCell className="px-6">{new Date(cliente.data_nascimento).toLocaleDateString('pt-BR')}</TableCell>
                     <TableCell className="px-6 text-right">{cliente.telefone}</TableCell>
-                    <TableCell className="text-right flex space-x-2 justify-end px-6">
+                    <TableCell className="text-center flex space-x-2 justify-end px-6">
                       <Link href={`/cliente/${cliente.id}`}>
                         <button className="px-4 py-2 mr-10 bg-yellow-500 text-white rounded-md">
                           Editar
