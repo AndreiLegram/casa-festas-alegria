@@ -10,7 +10,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/Components/ui/table";
+
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/Components/ui/dialog";
 import axios from 'axios';
+import { useState } from 'react';
+import { Input } from '@/Components/ui/input';
+import { Button } from '@/Components/ui/button';
 
 const handleDelete = async (id: number) => {
   if (confirm('Tem certeza que deseja excluir essa locação?')) {
@@ -25,6 +37,7 @@ const handleDelete = async (id: number) => {
 };
 
 export default function Locacoes({ locacoes, auth }: PageProps<{ locacoes: Array<any> }>) {
+  const [selectedLocacao, setSelectedLocacao] = useState<any | null>(null)
   return (
     <AuthenticatedLayout
       user={auth.user}
@@ -62,11 +75,12 @@ export default function Locacoes({ locacoes, auth }: PageProps<{ locacoes: Array
                     <TableCell className="px-6">{new Date(locacao.data_devolucao).toLocaleDateString('pt-BR')}</TableCell>
                     <TableCell className="px-6">{locacao.data_pagamento ? new Date(locacao.data_pagamento).toLocaleDateString('pt-BR') : 'Pendente'}</TableCell>
                     <TableCell className="text-right flex space-x-2 justify-end px-6">
-                    <Link href={`/locacao/${locacao.id}`}>
-                        <button className="px-4 py-2 mr-10 bg-green-500 text-white rounded-md">
-                          Pagar
-                        </button>
-                      </Link>
+                      <button
+                        className="px-4 py-2 mr-10 bg-green-500 text-white rounded-md"
+                        onClick={() => setSelectedLocacao(locacao)}
+                      >
+                        Pagar
+                      </button>
                       <Link href={`/locacao/${locacao.id}`}>
                         <button className="px-4 py-2 mr-10 bg-yellow-500 text-white rounded-md">
                           Editar
@@ -80,6 +94,37 @@ export default function Locacoes({ locacoes, auth }: PageProps<{ locacoes: Array
                 ))}
               </TableBody>
             </Table>
+            <Dialog open={!!selectedLocacao} onOpenChange={() => setSelectedLocacao(null)}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Pagamento da Locação</DialogTitle>
+                </DialogHeader>
+
+                {selectedLocacao && (
+                  <div className="space-y-4">
+                    <p><strong>Código:</strong> {selectedLocacao.codigo}</p>
+                    <p><strong>Valor Total:</strong> R$ {Number(selectedLocacao.valor_total).toFixed(2)}</p>
+                    <br />
+                    <label htmlFor="data_pagamento">Data do Pagamento
+                      <Input
+                        id="data_pagamento"
+                        type="date"
+                        defaultValue={new Date().toISOString().split("T")[0]}
+                      />
+                    </label>
+
+                    <DialogFooter className="mt-4">
+                      <Button onClick={() => {
+                        alert(`Pagamento confirmado para locação ${selectedLocacao.codigo}`);
+                        setSelectedLocacao(null);
+                      }}>
+                        Confirmar Pagamento
+                      </Button>
+                    </DialogFooter>
+                  </div>
+                )}
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </section>
