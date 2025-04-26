@@ -6,9 +6,12 @@ import { FieldError, useForm } from "react-hook-form";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { PageProps } from '@/types';
 import { Head, router } from "@inertiajs/react";
+import { useMemo } from "react";
 
 type LocacaoItem = {
   id_brinquedo: string;
+  quantidade: number;
+  valor_unitario: number;
 };
 
 type LocacaoFormData = {
@@ -30,7 +33,7 @@ export default function Locacoes({
   brinquedos: Array<any>, 
   auth: any 
 }>) {
-  const today = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
+  const today = new Date().toISOString().split("T")[0];
 
   const {
     register,
@@ -48,41 +51,58 @@ export default function Locacoes({
   });
 
   const [itens, setItens] = useState<LocacaoItem[]>([]);
-  const [itemSelecionado, setItemSelecionado] = useState<number | ''>('');
+  const [itemSelecionado, setItemSelecionado] = useState<string>('');
   const [processing, setProcessing] = useState(false);
   const [message, setMessage] = useState('');
   const [valorTotal, setValorTotal] = useState<number>(0);
+  
+  const brinquedosDisponiveis = useMemo(() => {
+    const idsSelecionados = itens.map(item => item.id_brinquedo);
+    return brinquedos.filter(brinquedo => !idsSelecionados.includes(brinquedo.id.toString()));
+  }, [brinquedos, itens])
 
-  // Se estiver editando, carregar itens e recalcular valorTotal
   useEffect(() => {
     if (locacao?.itens && locacao.itens.length > 0) {
-      setItens(locacao.itens);
-      const total = locacao.itens.reduce((acc, item) => {
-        const brinquedo = brinquedos.find(b => b.id === item.id_brinquedo);
-        return brinquedo ? acc + parseFloat(brinquedo.valor_locacao) : acc;
-      }, 0);
+      const formattedItens = locacao.itens.map((item) => {
+        const brinquedo = brinquedos.find(b => b.id.toString() === item.id_brinquedo);
+        return {
+          id_brinquedo: item.id_brinquedo.toString(),
+          quantidade: 1,
+          valor_unitario: brinquedo ? parseFloat(brinquedo.valor_locacao) : 0
+        };
+      });
+      setItens(formattedItens);
+      setValue("itens", formattedItens);
+  
+      const total = formattedItens.reduce((acc, item) => acc + item.valor_unitario, 0);
       setValorTotal(total);
       setValue("valor_total", total.toFixed(2));
     }
   }, [locacao, brinquedos, setValue]);
 
   const atualizarValorTotal = (novosItens: LocacaoItem[]) => {
-    const total = novosItens.reduce((acc, item) => {
-      const brinquedo = brinquedos.find(b => b.id === item.id_brinquedo);
-      return brinquedo ? acc + parseFloat(brinquedo.valor_locacao) : acc;
-    }, 0);
+    const total = novosItens.reduce((acc, item) => acc + item.valor_unitario, 0);
     setValorTotal(total);
     setValue("valor_total", total.toFixed(2));
   };
 
   const adicionarItem = () => {
     if (itemSelecionado !== '') {
-      const brinquedo = brinquedos.find(b => b.id === itemSelecionado);
+      const brinquedo = brinquedos.find(b => b.id.toString() === itemSelecionado);
       if (brinquedo) {
-        const novosItens = [...itens, { id_brinquedo: brinquedo.id }];
-        setItens(novosItens);
-        atualizarValorTotal(novosItens);
-        setItemSelecionado('');
+        const jaExiste = itens.some(i => i.id_brinquedo === itemSelecionado);
+        if (!jaExiste) {
+          const novoItem = {
+            id_brinquedo: itemSelecionado,
+            quantidade: 1,
+            valor_unitario: parseFloat(brinquedo.valor_locacao)
+          };
+          const novosItens = [...itens, novoItem];
+          setItens(novosItens);
+          setValue("itens", novosItens);
+          atualizarValorTotal(novosItens);
+          setItemSelecionado('');
+        }
       }
     }
   };
@@ -91,6 +111,7 @@ export default function Locacoes({
     const novosItens = [...itens];
     novosItens.splice(index, 1);
     setItens(novosItens);
+    setValue("itens", novosItens); // <-- fix
     atualizarValorTotal(novosItens);
   };
 
@@ -103,7 +124,6 @@ export default function Locacoes({
     };
 
     if (locacao?.id) {
-      // Atualização
       router.put(route('locacaoUpdate', locacao.id), payload, {
         onSuccess: () => {
           setMessage('Locação atualizada com sucesso!');
@@ -115,7 +135,6 @@ export default function Locacoes({
         },
       });
     } else {
-      // Criação
       router.post(route('locacaoStore'), payload, {
         onSuccess: () => {
           setMessage('Locação cadastrada com sucesso!');
@@ -157,7 +176,7 @@ export default function Locacoes({
                     <option key={cliente.id} value={cliente.id}>{cliente.nome}</option>
                   ))}
                 </select>
-                {errors.id_contato && <p className="text-red-500 text-sm">{(errors.id_contato as FieldError)?.message}</p>}
+                {errors.id_contato && <p className="text-red-500 text-sm">{errors.id_contato.message}</p>}
               </div>
 
               {/* Datas */}
@@ -167,11 +186,9 @@ export default function Locacoes({
                   <Input
                     id="data"
                     type="date"
-                    value={today}
-                    readOnly
-                    {...register("data")}
+                    {...register("data", { required: "A Data de Início é obrigatória" })}
                   />
-                  {errors.data && <p className="text-red-500 text-sm">{(errors.data as FieldError)?.message}</p>}
+                  {errors.data && <p className="text-red-500 text-sm">{errors.data.message}</p>}
                 </div>
 
                 <div>
@@ -181,11 +198,11 @@ export default function Locacoes({
                     type="date"
                     {...register("data_devolucao", { required: "A Data de Devolução é obrigatória" })}
                   />
-                  {errors.data_devolucao && <p className="text-red-500 text-sm">{(errors.data_devolucao as FieldError)?.message}</p>}
+                  {errors.data_devolucao && <p className="text-red-500 text-sm">{errors.data_devolucao.message}</p>}
                 </div>
               </div>
 
-              {/* Valor Total (readonly) */}
+              {/* Valor Total */}
               <div className="mt-4">
                 <label htmlFor="valor_total" className="block text-sm font-medium">Valor Total</label>
                 <Input
@@ -197,29 +214,29 @@ export default function Locacoes({
                 />
               </div>
 
-              {/* Seção de Itens da Locação */}
+              {/* Itens */}
               <div className="mt-6">
                 <h3 className="text-lg font-semibold mb-2">Itens da Locação</h3>
                 <div className="flex gap-4 mb-2">
-                  <select
-                    value={itemSelecionado}
-                    onChange={(e) => setItemSelecionado(e.target.value ? parseInt(e.target.value) : '')}
-                    className="w-full"
-                  >
-                    <option value="">Selecione o Brinquedo</option>
-                    {brinquedos.map((brinquedo) => (
-                      <option key={brinquedo.id} value={brinquedo.id}>
-                        {brinquedo.nome} - R$ {parseFloat(brinquedo.valor_locacao).toFixed(2)}
-                      </option>
-                    ))}
-                  </select>
+                <select
+                  value={itemSelecionado}
+                  onChange={(e) => setItemSelecionado(e.target.value)}
+                  className="w-full"
+                >
+                  <option value="">Selecione o Brinquedo</option>
+                  {brinquedosDisponiveis.map((brinquedo) => (
+                    <option key={brinquedo.id} value={brinquedo.id}>
+                      {brinquedo.nome} - R$ {parseFloat(brinquedo.valor_locacao).toFixed(2)}
+                    </option>
+                  ))}
+                </select>
                   <Button type="button" onClick={adicionarItem}>Adicionar</Button>
                 </div>
 
                 {itens.length > 0 && (
                   <ul className="mt-2 border rounded p-2 bg-gray-50">
                     {itens.map((item, index) => {
-                      const brinquedo = brinquedos.find(b => b.id === item.id_brinquedo);
+                      const brinquedo = brinquedos.find(b => b.id == item.id_brinquedo);
                       return (
                         <li key={index} className="flex justify-between items-center mb-1">
                           <span>
@@ -233,7 +250,6 @@ export default function Locacoes({
                 )}
               </div>
 
-              {/* Botão de Enviar */}
               <div className="mt-6">
                 <Button type="submit" className="w-full" disabled={processing}>
                   {locacao?.id ? 'Atualizar Locação' : 'Cadastrar Locação'}

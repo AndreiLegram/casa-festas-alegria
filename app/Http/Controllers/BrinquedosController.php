@@ -76,7 +76,7 @@ class BrinquedosController extends Controller
             'valor_locacao' => 'required|numeric',
           ]);
         $brinquedo = Brinquedo::create($validatedData);
-        return $this->index();
+        return redirect()->route('brinquedos');
     }
 
     public function update(Request $request, $id)
@@ -113,7 +113,7 @@ class BrinquedosController extends Controller
         ]);
 
         $brinquedo->update($validated);
-        return $this->index();
+        return redirect()->route('brinquedos');
     }
 
 
