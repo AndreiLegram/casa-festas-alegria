@@ -50,7 +50,7 @@ class FuncionariosController extends Controller {
         ]);
 
         $funcionario = User::create($validated); 
-        return $this->index();
+        return redirect()->route('funcionarios');
     }
 
     public function update(Request $request, $id)
@@ -75,7 +75,7 @@ class FuncionariosController extends Controller {
         ]);
 
         $funcionario->update($validated); 
-        return $this->index();
+        return redirect()->route('funcionarios');
     }
 
     public function destroy($id)
