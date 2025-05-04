@@ -3,11 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Funcionario; 
 use App\Models\User; 
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
-use Inertia\Response;
 
 class FuncionariosController extends Controller {
 
@@ -32,7 +29,10 @@ class FuncionariosController extends Controller {
         $funcionario = User::find($id);
 
         if (!$funcionario) {
-            return response()->json(['message' => 'Funcionario não encontrado'], 404);
+            return Inertia::render('funcionarios/funcionario', [
+                'errors' => ['message' => 'Funcionario não encontrado'],
+                'funcionario' => null
+            ]);
         }
 
         return response()->json($funcionario);
@@ -48,9 +48,16 @@ class FuncionariosController extends Controller {
             'cpf' => 'required|string|max:15',
             'permission_level' => 'required|string',
         ]);
-
-        $funcionario = User::create($validated); 
-        return redirect()->route('funcionarios');
+        
+        try {
+            $funcionario = User::create($validated);
+            return redirect()->route('funcionarios');
+        } catch (\Exception $e) {
+            return Inertia::render('funcionarios/funcionario', [
+                'errors' => ['message' => 'Erro ao criar funcionario: ' . $e->getMessage()],
+                'funcionario' => $validated
+            ]);
+        }
     }
 
     public function update(Request $request, $id)
@@ -59,10 +66,9 @@ class FuncionariosController extends Controller {
 
         if (!$funcionario) {
             return Inertia::render('funcionarios/funcionario', [
-                'errors' => ['message' => 'Funcionario não encontradoo.'],
-                'funcionarios' => $request->all()
+                'errors' => ['message' => 'Funcionario não encontrado'],
+                'funcionario' => $request->all()
             ]);
-            return response()->json(['message' => 'Funcionario não encontrado'], 404);
         }
 
         $validated = $request->validate([
@@ -74,8 +80,15 @@ class FuncionariosController extends Controller {
             'permission_level' => 'required|string',
         ]);
 
-        $funcionario->update($validated); 
-        return redirect()->route('funcionarios');
+        try {
+            $funcionario->update($validated); 
+            return redirect()->route('funcionarios');
+        } catch (\Exception $e) {
+            return Inertia::render('funcionarios/funcionario', [
+                'errors' => ['message' => 'Erro ao atualizar funcionario: ' . $e->getMessage()],
+                'funcionario' => $validated
+            ]);
+        }
     }
 
     public function destroy($id)
@@ -83,10 +96,20 @@ class FuncionariosController extends Controller {
         $funcionario = User::find($id);
 
         if (!$funcionario) {
-            return response()->json(['message' => 'Funcionario não encontrado'], 404);
+            return Inertia::render('funcionarios/funcionario', [
+                'errors' => ['message' => 'Funcionario não encontrado'],
+                'funcionario' => null
+            ]);
         }
 
-        $funcionario->delete();
-        return response()->json(['message' => 'Funcionario deletado com sucesso']);
+        try {
+            $funcionario->delete();
+            return response()->json(['message' => 'Funcionario deletado com sucesso']);
+        } catch (\Exception $e) {
+            return Inertia::render('funcionarios/funcionario', [
+                'errors' => ['message' => 'Erro ao deletar funcionario: ' . $e->getMessage()],
+                'funcionario' => null
+            ]);
+        }
     }
 }
