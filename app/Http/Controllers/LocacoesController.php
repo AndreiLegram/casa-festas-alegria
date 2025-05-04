@@ -22,7 +22,6 @@ class LocacoesController extends Controller {
         return Inertia::render('locacao/locacoes', [
             'locacoes' => $locacoes
         ]);
-        return response()->json($locacoes);  
     }
 
     public function form($id = null)
@@ -55,11 +54,7 @@ class LocacoesController extends Controller {
 
         $clientes = Cliente::all();
 
-        return Inertia::render('locacao/locacao', [
-            'locacao' => $locacao,
-            'brinquedos' => $brinquedos,
-            'clientes' => $clientes,
-        ]);
+        return redirect()->route('locacoes');
     }
 
 

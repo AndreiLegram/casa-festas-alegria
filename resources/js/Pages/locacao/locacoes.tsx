@@ -27,7 +27,7 @@ import { Button } from '@/Components/ui/button';
 const handleDelete = async (id: number) => {
   if (confirm('Tem certeza que deseja excluir essa locação?')) {
     try {
-      await axios.delete(route('locacoes.destroy', id));
+      await axios.delete(route('locacaoDelete', id));
       window.location.reload();
     } catch (error) {
       console.error("Erro:", error);
@@ -37,7 +37,30 @@ const handleDelete = async (id: number) => {
 };
 
 export default function Locacoes({ locacoes, auth }: PageProps<{ locacoes: Array<any> }>) {
-  const [selectedLocacao, setSelectedLocacao] = useState<any | null>(null)
+  const [selectedLocacao, setSelectedLocacao] = useState<any | null>(null);
+  const [dataPagamento, setDataPagamento] = useState<string>(new Date().toISOString().split("T")[0]);
+
+  const handleConfirmarPagamento = async () => {
+    if (!selectedLocacao) return;
+
+    try {
+      router.post(route('pagamentosStore', selectedLocacao.id), {
+        valor_total: selectedLocacao.valor_total,
+        data_pagamento: dataPagamento
+      }, {
+        onSuccess: () => {
+          setSelectedLocacao(null);
+        },
+        onError: () => {
+          alert('Erro ao confirmar pagamento. Verifique os dados e tente novamente.');
+        }
+      });
+    } catch (error: any) {
+      console.error("Erro ao confirmar pagamento:", error);
+      alert('Erro ao confirmar pagamento. Verifique os dados e tente novamente.');
+    }
+  };
+
   return (
     <AuthenticatedLayout
       user={auth.user}
@@ -75,20 +98,22 @@ export default function Locacoes({ locacoes, auth }: PageProps<{ locacoes: Array
                     <TableCell className="px-6">{new Date(locacao.data_devolucao).toLocaleDateString('pt-BR')}</TableCell>
                     <TableCell className="px-6">{locacao.data_pagamento ? new Date(locacao.data_pagamento).toLocaleDateString('pt-BR') : 'Pendente'}</TableCell>
                     <TableCell className="text-right flex space-x-2 justify-end px-6">
-                      <button
-                        className="px-4 py-2 mr-10 bg-green-500 text-white rounded-md"
-                        onClick={() => setSelectedLocacao(locacao)}
-                      >
-                        Pagar
-                      </button>
+                      {!locacao.data_pagamento && (
+                        <button
+                          className="px-4 py-2 mr-10 bg-green-500 text-white rounded-md"
+                          onClick={() => setSelectedLocacao(locacao)}
+                        >
+                          Pagar
+                        </button>
+                      )}
                       <Link href={`/locacao/${locacao.id}`}>
                         <button className="px-4 py-2 mr-10 bg-yellow-500 text-white rounded-md">
                           Editar
                         </button>
                       </Link>
-                        <button onClick={() => handleDelete(locacao.id)} className="px-4 py-2 bg-red-500 text-white rounded-md">
-                          Deletar
-                        </button>
+                      <button onClick={() => handleDelete(locacao.id)} className="px-4 py-2 bg-red-500 text-white rounded-md">
+                        Deletar
+                      </button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -109,15 +134,13 @@ export default function Locacoes({ locacoes, auth }: PageProps<{ locacoes: Array
                       <Input
                         id="data_pagamento"
                         type="date"
-                        defaultValue={new Date().toISOString().split("T")[0]}
+                        value={dataPagamento}
+                        onChange={(e) => setDataPagamento(e.target.value)}
                       />
                     </label>
 
                     <DialogFooter className="mt-4">
-                      <Button onClick={() => {
-                        alert(`Pagamento confirmado para locação ${selectedLocacao.codigo}`);
-                        setSelectedLocacao(null);
-                      }}>
+                      <Button onClick={handleConfirmarPagamento}>
                         Confirmar Pagamento
                       </Button>
                     </DialogFooter>

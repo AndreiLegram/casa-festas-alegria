@@ -43,7 +43,8 @@ export default function Funcionarios({ funcionario, auth }: PageProps<{ funciona
           setMessage('Funcionario atualizado com sucesso!');
         },
         onError: (errors: any) => {
-          setMessage(errors.message || "Ocorreu um erro inesperado.");
+          console.log(errors); // Verifique o conteúdo dos erros aqui
+          setMessage(errors?.message || "Ocorreu um erro inesperado.");
         },
       });
     } else {
@@ -52,11 +53,13 @@ export default function Funcionarios({ funcionario, auth }: PageProps<{ funciona
           setMessage('Funcionario cadastrado com sucesso!');
         },
         onError: (errors: any) => {
-          setMessage(errors.message || "Ocorreu um erro inesperado.");
+          console.log(errors); // Verifique o conteúdo dos erros aqui
+          setMessage(errors?.message || "Ocorreu um erro inesperado.");
         },
       });
     }
   };
+  
 
   return (
     <AuthenticatedLayout
@@ -135,10 +138,11 @@ export default function Funcionarios({ funcionario, auth }: PageProps<{ funciona
                 className="w-full"
                 {...register("password", {
                   required: !funcionario?.id ? "A senha é obrigatória" : false,
+                  minLength: {
+                    value: 8,
+                    message: "A senha deve ter no mínimo 8 caracteres"
+                  }
                 })}
-                defaultValue={funcionario?.password ?? ''}
-                readOnly={!!funcionario?.id}
-
               />
               {errors.password && <p className="text-red-500 text-sm">{(errors.password as FieldError)?.message}</p>}
             </div>
