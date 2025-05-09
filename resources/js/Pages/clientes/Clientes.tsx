@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/Components/ui/table";
 import axios from 'axios';
-import { formatCPF } from '@/lib/utils';
+import { formatCPF, formatISOToPtBR } from '@/lib/utils';
 
 const handleDelete = async (id: number) => {
   if (confirm('Tem certeza que deseja excluir esse cliente?')) {
@@ -58,7 +58,7 @@ export default function Cliente({ clientes, auth, mustVerifyEmail, status }: Pag
                     <TableCell className="px-6">{cliente.nome}</TableCell>
                     <TableCell className="px-6">{formatCPF(cliente.cpf)}</TableCell>
                     <TableCell className="px-6">{cliente.endereco}</TableCell>
-                    <TableCell className="px-6">{new Date(cliente.data_nascimento).toLocaleDateString('pt-BR')}</TableCell>
+                    <TableCell className="px-6">{formatISOToPtBR(cliente.data_nascimento)}</TableCell>
                     <TableCell className="px-6 text-right">{cliente.telefone}</TableCell>
                     <TableCell className="text-center flex space-x-2 justify-end px-6">
                       <Link href={`/cliente/${cliente.id}`}>

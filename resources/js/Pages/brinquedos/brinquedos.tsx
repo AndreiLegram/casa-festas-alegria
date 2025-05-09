@@ -3,6 +3,7 @@ import { Head, Link } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import axios from 'axios';
+import { formatISOToPtBR } from "@/lib/utils";
 
 export default function Brinquedos({ brinquedos, auth, mustVerifyEmail, status }: PageProps<{ brinquedos: Array<any>, mustVerifyEmail: boolean, status?: string }>) {
 
@@ -54,7 +55,7 @@ export default function Brinquedos({ brinquedos, auth, mustVerifyEmail, status }
                     <TableCell className="px-6">{brinquedo.tipo}</TableCell>
                     <TableCell className="px-6">{brinquedo.marca}</TableCell>
                     <TableCell className="px-6">
-                      {new Date(brinquedo.data_aquisicao).toLocaleDateString('pt-BR')}
+                      {formatISOToPtBR(brinquedo.data_aquisicao)}
                     </TableCell>
                     <TableCell className="px-6">{brinquedo.valor_locacao}</TableCell>
                     <TableCell className="px-6">{brinquedo.situacao}</TableCell>

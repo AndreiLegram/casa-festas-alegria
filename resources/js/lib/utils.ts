@@ -41,3 +41,12 @@ export function maskPhone(value: string): string {
       .slice(0, 15);
   }
 }
+
+export function formatISOToPtBR(isoDateString: string): string {
+  if (!isoDateString) return '';
+
+  // Garante que apenas a parte da data (aaaa-mm-dd) será usada
+  const [year, month, day] = isoDateString.split('T')[0].split('-');
+
+  return `${day}/${month}/${year}`;
+}
