@@ -14,7 +14,8 @@ class Locacao extends Model
         'data',
         'id_contato',
         'valor_total',
-        'data_devolucao'
+        'data_devolucao',
+        'data_pagamento',
     ];
 
     protected $dates = ['data', 'data_devolucao'];

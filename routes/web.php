@@ -6,6 +6,7 @@ use App\Http\Controllers\BrinquedosController;
 use App\Http\Controllers\TiposBrinquedosController;
 use App\Http\Controllers\FuncionariosController;
 use App\Http\Controllers\LocacoesController;
+use App\Http\Controllers\PagamentosController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -78,6 +79,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/locacaoStore', [LocacoesController::class, 'store'])->name('locacaoStore');
     Route::put('/locacaoUpdate/{id}', [LocacoesController::class, 'update'])->name('locacaoUpdate');
     Route::delete('/locacaoDelete/{id}', [LocacoesController::class, 'destroy'])->name('locacaoDelete');
+    Route::post('/locacao/pagamento/{id}', [LocacoesController::class, 'pagamento'])->name('pagamentosStore');
 });
 
 require __DIR__.'/auth.php';
