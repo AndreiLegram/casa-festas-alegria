@@ -3,7 +3,6 @@ import { Head, Link } from '@inertiajs/react';
 import { PageProps } from '@/types';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/Components/ui/table";
 import axios from 'axios';
-import { router } from "@inertiajs/react";
 
 export default function TiposBrinquedos({ tiposBrinquedos, auth, mustVerifyEmail, status }: PageProps<{ tiposBrinquedos: Array<any>, mustVerifyEmail: boolean, status?: string }>) {
 

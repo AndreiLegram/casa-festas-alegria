@@ -42,10 +42,6 @@ class TiposBrinquedosController extends Controller {
     {
         $tipoBrinquedo = TipoBrinquedo::find($id);
 
-        if (!$tipoBrinquedo) {
-            return response()->json(['message' => 'Tipo Brinquedo não encontrado'], 404);
-        }
-
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
             'codigo' => 'required|string|max:255'
@@ -60,10 +56,10 @@ class TiposBrinquedosController extends Controller {
         $tipoBrinquedo = TipoBrinquedo::find($id);
 
         if (!$tipoBrinquedo) {
-            return response()->json(['message' => 'Brinquedo não encontrado'], 404); 
+            return response()->json(['message' => 'Tipo de Brinquedo não encontrado'], 404); 
         }
 
         $tipoBrinquedo->delete();
-        return redirect()->route('tiposBrinquedos');  
+        return response()->json(['message' => 'Tipo de Brinquedo deletado com sucesso'], 200);  
     }
 }

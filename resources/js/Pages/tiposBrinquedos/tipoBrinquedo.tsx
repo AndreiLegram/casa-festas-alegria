@@ -8,6 +8,7 @@ import { PageProps } from '@/types';
 import { Head, router } from "@inertiajs/react";
 import { useForm as useInertiaForm } from '@inertiajs/react';
 
+
 export default function TipoBrinquedo({ tipoBrinquedo, auth }: PageProps<{ tipoBrinquedo: any, auth: any }>) {
   // React Hook Form
   const { register, handleSubmit, formState: { errors } } = useForm({

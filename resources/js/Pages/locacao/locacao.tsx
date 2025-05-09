@@ -116,6 +116,11 @@ export default function Locacoes({
   };
 
   const submitForm = (data: LocacaoFormData) => {
+    if (itens.length === 0) {
+      setMessage('É necessário adicionar ao menos um item à locação.');
+      return;
+    }
+
     setProcessing(true);
     const payload = {
       ...data,

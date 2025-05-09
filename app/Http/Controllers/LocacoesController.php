@@ -54,7 +54,11 @@ class LocacoesController extends Controller {
 
         $clientes = Cliente::all();
 
-        return redirect()->route('locacoes');
+        return Inertia::render('locacao/locacao', [
+            'locacao' => $locacao,
+            'brinquedos' => $brinquedos,
+            'clientes' => $clientes,
+        ]);
     }
 
 
@@ -94,8 +98,6 @@ class LocacoesController extends Controller {
                 Brinquedo::where('id', $item['id_brinquedo'])
                     ->update(['situacao' => 'indisponivel']);
             }
-        } else {
-            return response()->json('Locação sem itens!', 400);
         }
 
         return redirect()->route('locacoes');
@@ -140,8 +142,6 @@ class LocacoesController extends Controller {
                     'quantidade' => $item['quantidade']
                 ]);
             }
-        } else {
-            return response()->json('Locação sem itens!', 400);
         }
 
         
@@ -165,7 +165,7 @@ class LocacoesController extends Controller {
             'data_pagamento' => $validated['data_pagamento']
         ]);
 
-        return response()->json('Locação paga com sucesso!', 200);
+        return redirect()->route('locacoes');
     }
 
 
