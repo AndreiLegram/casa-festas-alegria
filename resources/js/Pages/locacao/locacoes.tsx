@@ -45,17 +45,19 @@ export default function Locacoes({ locacoes, auth }: PageProps<{ locacoes: Array
     if (!selectedLocacao) return;
 
     try {
-      router.post(route('pagamentosStore', selectedLocacao.id), {
+      axios.post(route('pagamentosStore', selectedLocacao.id), {
         valor_total: selectedLocacao.valor_total,
         data_pagamento: dataPagamento
-      }, {
-        onSuccess: () => {
-          setSelectedLocacao(null);
-        },
-        onError: () => {
-          alert('Erro ao confirmar pagamento. Verifique os dados e tente novamente.');
-        }
-      });
+      })
+      .then((res) => {
+        console.log(res);
+        setSelectedLocacao(null);
+        window.location.reload();
+      })
+      .catch((res) => {
+        console.log(res);
+        alert('Erro ao confirmar pagamento. Verifique os dados e tente novamente.');
+      })
     } catch (error: any) {
       console.error("Erro ao confirmar pagamento:", error);
       alert('Erro ao confirmar pagamento. Verifique os dados e tente novamente.');

@@ -182,9 +182,7 @@ class LocacoesController extends Controller {
 
             return redirect()->route('locacoes');
         } catch (\Exception $e) {
-            return Inertia::render('locacao/locacao', [
-                'errors' => ['message' => 'Erro ao realizar pagamento: ' . $e->getMessage()]
-            ]);
+            return response()->json(['message' => 'Erro ao realizar pagamento: ' . $e->getMessage()], 500);
         }
     }
 
